@@ -1,4 +1,6 @@
 *.o
 csim
 *.swp
+*.pyc
+*.so
 
