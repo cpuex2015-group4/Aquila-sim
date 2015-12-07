@@ -27,9 +27,10 @@ typedef struct operands_{
 	unsigned int s_idx;
 	unsigned int t_idx;
 	unsigned int d_idx;
+	unsigned int i;
 	unsigned int rorf; // r:=0 , f:=1
 	unsigned int opt;
-	unsigned int jopt;
+	unsigned int bit_image;
 	int imm;
 }operands;
 
