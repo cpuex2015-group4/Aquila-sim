@@ -24,15 +24,13 @@ typedef struct simulator_{
 
 
 typedef struct operands_{
-	unsigned int reg_s_idx;
-	unsigned int reg_t_idx;
-	unsigned int reg_d_idx;
-	int shamt;
+	unsigned int s_idx;
+	unsigned int t_idx;
+	unsigned int d_idx;
+	unsigned int rorf; // r:=0 , f:=1
+	unsigned int opt;
+	unsigned int jopt;
 	int imm;
-	int adress;
-	unsigned int ft_idx;
-	unsigned int fs_idx;
-	unsigned int fd_idx;
 }operands;
 
 

@@ -186,46 +186,40 @@ void load_binary(simulator* sim, FILE* fp)
 	return;
 }
 
+operands decode_X(instruction inst)
+{
+	operands ops;
+	ops.d_idx = get_binary_unsigned(inst, 6, 11);
+	ops.s_idx = get_binary_unsigned(inst, 11, 16);
+	ops.t_idx = get_binary_unsigned(inst, 16, 21);
+	ops.funct = get_binary_unsigned(inst, 21, 31);
+	return ops;
+}
+
+operands decode_B(instruction inst)
+{
+	operands ops;
+	ops.d_idx = get_binary_unsigned(inst, 6, 11);
+	ops.s_idx = get_binary_unsigned(inst, 11, 16);
+	ops.imm = get_binary_unsigned(inst, 16, 32);
+	return ops;
+}
+
 operands decode_R(instruction inst)
 {
 	operands ops;
-	ops.reg_s_idx = get_binary_unsigned(inst, 6, 11);
-	ops.reg_t_idx = get_binary_unsigned(inst, 11, 16);
-	ops.reg_d_idx = get_binary_unsigned(inst, 16, 21);
-	ops.shamt = get_binary_unsigned(inst, 21, 26);
+	ops.d_idx = get_binary_unsigned(inst, 6, 11);
+	ops.s_idx = get_binary_unsigned(inst, 11, 16);
+	ops.t_idx = get_binary_unsigned(inst, 16, 21);
 	return ops;
 }
 
 operands decode_I(instruction inst)
 {
 	operands ops;
-	ops.reg_s_idx = get_binary_unsigned(inst, 6, 11);
-	ops.reg_t_idx = get_binary_unsigned(inst, 11, 16);
-	ops.imm = get_binary_signed(inst, 16, 32);
-	return ops;
-}
-
-operands decode_J(instruction inst)
-{
-	operands ops;
-	ops.imm = get_binary_signed(inst, 6, 32);
-	return ops;
-}
-
-operands decode_FR(instruction inst)
-{
-	operands ops;
-	ops.ft_idx = get_binary_unsigned(inst, 11, 16);
-	ops.fs_idx = get_binary_unsigned(inst, 16, 21);
-	ops.fd_idx = get_binary_unsigned(inst, 21, 26);
-	return ops;
-}
-
-operands decode_FI(instruction inst)
-{
-	operands ops;
-	ops.ft_idx = get_binary_unsigned(inst, 11, 16);
-	ops.imm = get_binary_signed(inst, 16, 32);
+	ops.d_idx = get_binary_unsigned(inst, 6, 11);
+	ops.s_idx = get_binary_unsigned(inst, 11, 16);
+	ops.imm = get_binary_unsigned(inst, 16, 32);
 	return ops;
 }
 
