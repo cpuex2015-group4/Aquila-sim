@@ -27,7 +27,7 @@ int SIGNATURE = 0;
 int STATISTICS = 0;
 unsigned long MEM_SIZE = 100000000000L;
 
-extern void debugger_main(void);
+//extern void debugger_main(void);
 
 int main(int argc, char* argv[])
 {
@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
 			 * Option that does not need arg
 			 */
 			case 'd':
-				main_debugger();
+				//main_debugger();
 				IS_DEBUG = 1;
 				break;
 

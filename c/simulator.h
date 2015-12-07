@@ -31,6 +31,7 @@ typedef struct operands_{
 	unsigned int rorf; // r:=0 , f:=1
 	unsigned int opt;
 	unsigned int bit_image;
+	unsigned int funct;
 	int imm;
 }operands;
 

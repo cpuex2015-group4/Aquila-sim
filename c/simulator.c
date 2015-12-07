@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <math.h>
 #include "./utils.h"
 #include "./simulator.h"
 
@@ -51,7 +52,7 @@ enum INST{
 	INST_IN__IDX,
 	INST_OUT_IDX,
 	INST_HLT_IDX,
-}
+};
 
 int inst_cnt_arr[35];
 char* inst_name_arr[] = { "add", "addi", "and", "beq", "bne", "j", "jal", "jr", "jral", 
@@ -217,7 +218,7 @@ int opt_float(float x, int opt){
 operands decode_X(instruction inst)
 {
 	operands ops;
-	ops.i; = get_binary_unsigned(inst, 0, 1);
+	ops.i = get_binary_unsigned(inst, 0, 1);
 	ops.d_idx = get_binary_unsigned(inst, 6, 11);
 	ops.s_idx = get_binary_unsigned(inst, 11, 16);
 	ops.t_idx = get_binary_unsigned(inst, 16, 21);
@@ -228,7 +229,7 @@ operands decode_X(instruction inst)
 operands decode_B(instruction inst)
 {
 	operands ops;
-	ops.i; = get_binary_unsigned(inst, 0, 1);
+	ops.i = get_binary_unsigned(inst, 0, 1);
 	ops.rorf = get_binary_unsigned(inst, 1, 2);
 	ops.opt = get_binary_unsigned(inst, 2, 4);
 	ops.bit_image = get_binary_unsigned(inst, 4, 6);
@@ -241,7 +242,7 @@ operands decode_B(instruction inst)
 operands decode_R(instruction inst)
 {
 	operands ops;
-	ops.i; = get_binary_unsigned(inst, 0, 1);
+	ops.i = get_binary_unsigned(inst, 0, 1);
 	ops.rorf = get_binary_unsigned(inst, 1, 2);
 	ops.opt = get_binary_unsigned(inst, 2, 4);
 	ops.bit_image = get_binary_unsigned(inst, 4, 6);
@@ -254,7 +255,7 @@ operands decode_R(instruction inst)
 operands decode_I(instruction inst)
 {
 	operands ops;
-	ops.i; = get_binary_unsigned(inst, 0, 1);
+	ops.i = get_binary_unsigned(inst, 0, 1);
 	ops.rorf = get_binary_unsigned(inst, 1, 2);
 	ops.opt = get_binary_unsigned(inst, 2, 4);
 	ops.bit_image = get_binary_unsigned(inst, 4, 6);
@@ -271,79 +272,98 @@ typedef union myfloat_{
 	uint32_t muint;
 	float mfloat;
 }myfloat;
-int inst_add(simulator* sim_p, operation ops)
+
+int inst_add(simulator* sim_p, operands ops)
 {
 	if(INST_CNT)inst_cnt_arr[INST_ADD_IDX]++;
 	if(ops.rorf == 0){
 		int reg_s = sim_p->reg[ops.s_idx];
 		int reg_t = sim_p->reg[ops.t_idx];
 		int reg_d = ops.i == 0 ? reg_s + reg_t : reg_s + ops.imm;
-		sim_p->reg[ops.d_idx] = opt_int(reg_d);
+		sim_p->reg[ops.d_idx] = opt_int(reg_d, ops.opt);
 	}else{
 		float reg_s = sim_p->f_reg[ops.s_idx];
 		float reg_t = sim_p->f_reg[ops.t_idx];
 		float reg_d = reg_s + reg_t;
-		sim_p->f_reg[ops.d_idx] = opt_float(reg_d);
+		sim_p->f_reg[ops.d_idx] = opt_float(reg_d, ops.opt);
 	}
 	sim_p->pc++;
 	return 1;
 }
 
-int inst_sub(simulator* sim_p, operation ops)
+int inst_sub(simulator* sim_p, operands ops)
 {
 	if(INST_CNT)inst_cnt_arr[INST_SUB_IDX]++;
 	if(ops.rorf == 0){
 		int reg_s = sim_p->reg[ops.s_idx];
 		int reg_t = sim_p->reg[ops.t_idx];
 		int reg_d = ops.i == 0 ? reg_s - reg_t : reg_s - ops.imm;
-		sim_p->reg[ops.d_idx] = opt_int(reg_d);
+		sim_p->reg[ops.d_idx] = opt_int(reg_d, ops.opt);
 	}else{
 		float reg_s = sim_p->f_reg[ops.s_idx];
 		float reg_t = sim_p->f_reg[ops.t_idx];
 		float reg_d = reg_s - reg_t;
-		sim_p->f_reg[ops.d_idx] = opt_float(reg_d);
+		sim_p->f_reg[ops.d_idx] = opt_float(reg_d, ops.opt);
 	}
 	sim_p->pc++;
 	return 1;
 }
 
-int inst_mul(simulator* sim_p, operation ops)
+int inst_mul(simulator* sim_p, operands ops)
 {
 	if(INST_CNT)inst_cnt_arr[INST_MULS_IDX]++;
 	if(ops.rorf == 0){
 		int reg_s = sim_p->reg[ops.s_idx];
 		int reg_t = sim_p->reg[ops.t_idx];
 		int reg_d = ops.i == 0 ? reg_s * reg_t : reg_s * ops.imm;
-		sim_p->reg[ops.d_idx] = opt_int(reg_d);
+		sim_p->reg[ops.d_idx] = opt_int(reg_d, ops.opt);
 	}else{
 		float reg_s = sim_p->f_reg[ops.s_idx];
 		float reg_t = sim_p->f_reg[ops.t_idx];
 		float reg_d = reg_s * reg_t;
-		sim_p->f_reg[ops.d_idx] = opt_float(reg_d);
+		sim_p->f_reg[ops.d_idx] = opt_float(reg_d, ops.opt);
 	}
 	sim_p->pc++;
 	return 1;
 }
 
-int inst_div(simulator* sim_p, operation ops)
+int inst_div(simulator* sim_p, operands ops)
 {
 	if(INST_CNT)inst_cnt_arr[INST_DIV_IDX]++;
 	if(ops.rorf == 0){
 		int reg_s = sim_p->reg[ops.s_idx];
 		int reg_t = sim_p->reg[ops.t_idx];
 		int reg_d = ops.i == 0 ? reg_s / reg_t : reg_s / ops.imm;
-		sim_p->reg[ops.d_idx] = opt_int(reg_d);
+		sim_p->reg[ops.d_idx] = opt_int(reg_d, ops.opt);
 	}else{
 		float reg_s = sim_p->f_reg[ops.s_idx];
 		float reg_t = sim_p->f_reg[ops.t_idx];
 		float reg_d = reg_s / reg_t;
-		sim_p->f_reg[ops.d_idx] = opt_float(reg_d);
+		sim_p->f_reg[ops.d_idx] = opt_float(reg_d, ops.opt);
 	}
 	sim_p->pc++;
 	return 1;
 }
 
-int inst_beq(simulator* sim_p, operation ops)
+int inst_invs(simulator* sim_p, operands ops)
+{
+	float reg_s = sim_p->f_reg[ops.s_idx];
+	float reg_d = 1.0 / reg_s;
+	sim_p->f_reg[ops.d_idx] = opt_float(reg_d, ops.opt);
+	sim_p->pc++;
+	return 1;
+}
+
+int inst_sqrts(simulator* sim_p, operands ops)
+{
+	float reg_s = sim_p->f_reg[ops.s_idx];
+	float reg_d = sqrt(reg_s);
+	sim_p->f_reg[ops.d_idx] = opt_float(reg_d, ops.opt);
+	sim_p->pc++;
+	return 1;
+}
+
+int inst_beq(simulator* sim_p, operands ops)
 {
 	if(INST_CNT)inst_cnt_arr[INST_BEQ_IDX]++;
 	if(ops.rorf == 0){
@@ -363,7 +383,7 @@ int inst_beq(simulator* sim_p, operation ops)
 	return 1;
 }
 
-int inst_blt(simulator* sim_p, operation ops)
+int inst_blt(simulator* sim_p, operands ops)
 {
 	if(ops.rorf == 0){
 		int reg_d = sim_p->reg[ops.d_idx];
@@ -382,7 +402,7 @@ int inst_blt(simulator* sim_p, operation ops)
 	return 1;
 }
 
-int inst_ble(simulator* sim_p, operation ops)
+int inst_ble(simulator* sim_p, operands ops)
 {
 	if(ops.rorf == 0){
 		int reg_d = sim_p->reg[ops.d_idx];
@@ -400,7 +420,7 @@ int inst_ble(simulator* sim_p, operation ops)
 	sim_p->pc++;
 	return 1;
 }
-int inst_j(simulator* sim_p, operation ops)
+int inst_j(simulator* sim_p, operands ops)
 {
 	if(INST_CNT)inst_cnt_arr[INST_J_IDX]++;
 	sim_p->pc = ops.imm;
@@ -410,7 +430,7 @@ int inst_j(simulator* sim_p, operation ops)
 	return 1;
 }
 
-int inst_jr(simulator* sim_p, operation ops)
+int inst_jr(simulator* sim_p, operands ops)
 {
 	if(INST_CNT)inst_cnt_arr[INST_JR_IDX]++;
 	int reg_s = sim_p->reg[ops.s_idx];
@@ -421,7 +441,7 @@ int inst_jr(simulator* sim_p, operation ops)
 	return 1;
 }
 
-int inst_lw(simulator* sim_p, operation ops)
+int inst_ld(simulator* sim_p, operands ops)
 {
 	if(INST_CNT)inst_cnt_arr[INST_LW_IDX]++;
 	int reg_s = sim_p->reg[ops.s_idx];
@@ -434,7 +454,7 @@ int inst_lw(simulator* sim_p, operation ops)
 	return 1;
 }
 
-int inst_sw(simulator* sim_p, operation ops)
+int inst_st(simulator* sim_p, operands ops)
 {
 	if(INST_CNT)inst_cnt_arr[INST_SW_IDX]++;
 	int reg_s = sim_p->reg[ops.s_idx];
@@ -447,7 +467,7 @@ int inst_sw(simulator* sim_p, operation ops)
 	return 1;
 }
 
-int inst_sll(simulator* sim_p, operation ops)
+int inst_sll(simulator* sim_p, operands ops)
 {
 	if(INST_CNT)inst_cnt_arr[INST_SLL_IDX]++;
 	int reg_s = sim_p->reg[ops.s_idx];
@@ -456,7 +476,7 @@ int inst_sll(simulator* sim_p, operation ops)
 	return 1;
 }
 
-int inst_srl(simulator* sim_p, operation ops)
+int inst_srl(simulator* sim_p, operands ops)
 {
 	if(INST_CNT)inst_cnt_arr[INST_SRL_IDX]++;
 	int reg_s = sim_p->reg[ops.s_idx];
@@ -465,7 +485,7 @@ int inst_srl(simulator* sim_p, operation ops)
 	return 1;
 }
 
-int inst_in_(simulator* sim_p, operation ops)
+int inst_in_(simulator* sim_p, operands ops)
 {
 	if(INST_CNT)inst_cnt_arr[INST_IN__IDX]++;
 	char in_;
@@ -475,7 +495,7 @@ int inst_in_(simulator* sim_p, operation ops)
 	return 1;
 }
 
-int inst_out(simulator* sim_p, operation ops)
+int inst_out(simulator* sim_p, operands ops)
 {
 	if(INST_CNT)inst_cnt_arr[INST_OUT_IDX]++;
 	printf("%c", (char)sim_p->reg[ops.t_idx]);
@@ -483,7 +503,22 @@ int inst_out(simulator* sim_p, operation ops)
 	return 1;
 }
 
-int inst_hlt(simulator* sim_p, operation ops)
+int inst_nop(simulator* sim_p, operands ops)
+{
+	return 1;
+}
+
+int inst_itof(simulator* sim_p, operands ops)
+{
+	return 1;
+}
+
+int inst_ftoi(simulator* sim_p, operands ops)
+{
+	return 1;
+}
+
+int inst_hlt(simulator* sim_p, operands ops)
 {
 	if(INST_CNT)inst_cnt_arr[INST_HLT_IDX]++;
 	return 0;
@@ -511,7 +546,7 @@ int simulate_inst(simulator* sim_p, instruction inst, unsigned char i_binary,  u
 				return inst_nop(sim_p, ops);
 				break;
 			case 2:
-				return inst_in(sim_p, ops);
+				return inst_in_(sim_p, ops);
 				break;
 			case 3:
 				return inst_out(sim_p, ops);
@@ -530,7 +565,7 @@ int simulate_inst(simulator* sim_p, instruction inst, unsigned char i_binary,  u
 		 * Format B
 		 */
 		ops = decode_B(inst);
-		switch(bit_image){
+		switch(ops.bit_image){
 			case 0:
 				return inst_beq(sim_p, ops);
 				break;
@@ -574,23 +609,23 @@ int simulate_inst(simulator* sim_p, instruction inst, unsigned char i_binary,  u
 			}else if(ops.rorf == 0 && ops.bit_image == 3){
 				return inst_srl(sim_p, ops);
 			}else if(ops.rorf == 1 && ops.bit_image == 2){
-				return inst_inv(sim_p, ops);
+				return inst_invs(sim_p, ops);
 			}else if(ops.rorf == 1 && ops.bit_image == 3){
-				return inst_sqrt(sim_p, ops);
+				return inst_sqrts(sim_p, ops);
 			}
 		}else{
 			if(ops.bit_image == 0){
-				return inst_addi(sim_p, ops);
+				return inst_add(sim_p, ops);
 			}else if(ops.bit_image == 1){
-				return inst_subi(sim_p, ops);
+				return inst_sub(sim_p, ops);
 			}else if(ops.rorf == 0 && ops.bit_image == 2){
 				return inst_j(sim_p, ops);
 			}else if(ops.rorf == 0 && ops.bit_image == 3){
 				return inst_jr(sim_p, ops);
 			}else if(ops.rorf == 1 && ops.bit_image == 2){
-				return inst_muli(sim_p, ops);
+				return inst_mul(sim_p, ops);
 			}else if(ops.rorf == 1 && ops.bit_image == 3){
-				return inst_divi(sim_p, ops);
+				return inst_div(sim_p, ops);
 			}
 		}
 	}
@@ -600,15 +635,13 @@ int simulate_inst(simulator* sim_p, instruction inst, unsigned char i_binary,  u
 	 */
 	fprintf(stderr, "Not Found\n");
 	fprintf(stderr, "operation_binary = %d\n", operation_binary);
-	fprintf(stderr, "fmt_binary = %d\n", fmt_binary);
-	fprintf(stderr, "ft_binary = %d\n", ft_binary);
 	fprintf(stderr, "function_binary = %d\n", function_binary);
 	fprintf(stderr, "inst_binary = ");
 	print_int2bin(inst);
 	return 0;
 }
 
-extern int simulate_inst_debug(simulator* , instruction, unsigned char, unsigned char, unsigned char, unsigned char);
+//extern int simulate_inst_debug(simulator* , instruction, unsigned char, unsigned char, unsigned char, unsigned char);
 
 void simulate(simulator* sim_p)
 {
@@ -622,7 +655,8 @@ void simulate(simulator* sim_p)
 
 	int (*simulate_inst_p)(simulator*, instruction, unsigned char, unsigned char, unsigned char, unsigned char);
 	if(IS_DEBUG){
-		simulate_inst_p = simulate_inst_debug;
+		//simulate_inst_p = simulate_inst_debug;
+		simulate_inst_p = simulate_inst;
 	}else{
 		simulate_inst_p = simulate_inst;
 	}
