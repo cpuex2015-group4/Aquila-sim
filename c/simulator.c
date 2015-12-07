@@ -15,41 +15,43 @@ char* REG_ARR[] = {""};
 /*
  * Assign the Constant Number to the Instructions
  */
-int INST_ADD_IDX = 0;
-int INST_ADDI_IDX = 1;
-int INST_AND_IDX = 2;
-int INST_BEQ_IDX = 3;
-int INST_BNE_IDX = 4;
-int INST_J_IDX = 5;
-int INST_JAL_IDX = 6;
-int INST_JR_IDX = 7;
-int INST_JRAL_IDX = 8;
-int INST_LW_IDX = 9;
-int INST_NOR_IDX = 10;
-int INST_OR_IDX = 11;
-int INST_ORI_IDX = 12;
-int INST_SLT_IDX = 13;
-int INST_SLTI_IDX = 14;
-int INST_SLL_IDX = 15;
-int INST_SRL_IDX = 16;
-int INST_SW_IDX = 17;
-int INST_SUB_IDX = 18;
-int INST_BCLT_IDX = 19;
-int INST_BCLF_IDX = 20;
-int INST_DIV_IDX = 21;
-int INST_ADDS_IDX = 22;
-int INST_CSEQ_IDX = 23;
-int INST_CSLT_IDX = 24;
-int INST_CSLE_IDX = 25;
-int INST_MULS_IDX = 26;
-int INST_INVS_IDX = 27;
-int INST_SUBS_IDX = 28;
-int INST_LWS_IDX = 29;
-int INST_MULT_IDX = 30;
-int INST_SWS_IDX = 31;
-int INST_IN__IDX = 32;
-int INST_OUT_IDX = 33;
-int INST_HLT_IDX = 34;
+enum INST{
+	INST_ADD_IDX;
+	INST_ADDI_IDX;
+	INST_AND_IDX;
+	INST_BEQ_IDX;
+	INST_BNE_IDX;
+	INST_J_IDX;
+	INST_JAL_IDX;
+	INST_JR_IDX;
+	INST_JRAL_IDX;
+	INST_LW_IDX;
+	INST_NOR_IDX;
+	INST_OR_IDX;
+	INST_ORI_IDX;
+	INST_SLT_IDX;
+	INST_SLTI_IDX;
+	INST_SLL_IDX;
+	INST_SRL_IDX;
+	INST_SW_IDX;
+	INST_SUB_IDX;
+	INST_BCLT_IDX;
+	INST_BCLF_IDX;
+	INST_DIV_IDX;
+	INST_ADDS_IDX;
+	INST_CSEQ_IDX;
+	INST_CSLT_IDX;
+	INST_CSLE_IDX;
+	INST_MULS_IDX;
+	INST_INVS_IDX;
+	INST_SUBS_IDX;
+	INST_LWS_IDX;
+	INST_MULT_IDX;
+	INST_SWS_IDX;
+	INST_IN__IDX;
+	INST_OUT_IDX;
+	INST_HLT_IDX;
+}
 
 int inst_cnt_arr[35];
 char* inst_name_arr[] = { "add", "addi", "and", "beq", "bne", "j", "jal", "jr", "jral", 
