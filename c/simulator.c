@@ -505,16 +505,19 @@ int inst_out(simulator* sim_p, operands ops)
 
 int inst_nop(simulator* sim_p, operands ops)
 {
+	sim_p->pc++;
 	return 1;
 }
 
 int inst_itof(simulator* sim_p, operands ops)
 {
+	sim_p->pc++;
 	return 1;
 }
 
 int inst_ftoi(simulator* sim_p, operands ops)
 {
+	sim_p->pc++;
 	return 1;
 }
 
