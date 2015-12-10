@@ -644,7 +644,7 @@ int simulate_inst(simulator* sim_p, instruction inst, unsigned char i_binary,  u
 	return 0;
 }
 
-//extern int simulate_inst_debug(simulator* , instruction, unsigned char, unsigned char, unsigned char, unsigned char);
+extern int simulate_inst_debug(simulator* , instruction, unsigned char, unsigned char, unsigned char, unsigned char);
 
 void simulate(simulator* sim_p)
 {
@@ -658,8 +658,7 @@ void simulate(simulator* sim_p)
 
 	int (*simulate_inst_p)(simulator*, instruction, unsigned char, unsigned char, unsigned char, unsigned char);
 	if(IS_DEBUG){
-		//simulate_inst_p = simulate_inst_debug;
-		simulate_inst_p = simulate_inst;
+		simulate_inst_p = simulate_inst_debug;
 	}else{
 		simulate_inst_p = simulate_inst;
 	}
