@@ -87,6 +87,12 @@ char* REGISTERS_F[] = {"\%f0", "\%f1", "\%f2", "\%f3", "\%f4", "\%f5", "\%f6",
    	"\%f19", "\%f20", "\%f21", "\%f22", "\%f23", "\%f24",
 	"\%f25", "\%f26", "\%f27", "\%f28", "\%f29", "\%f30",
    	"\%f31"};
+
+typedef union myfloat_{
+	uint32_t muint;
+	float mfloat;
+}myfloat;
+
 /*
  * reference from simlator.c
  */
@@ -101,239 +107,127 @@ extern operands decode_I(instruction);
 
 int print_inst_add(simulator* sim_p, operands ops)
 {
-	if(ops.rorf == 0){
-		if(ops.i == 0){
-			fprintf(stderr, "add %s, %s, %s\n", REGISTERS_G[ops.d_idx], REGISTERS_G[ops.s_idx], REGISTERS_G[ops.t_idx]);
-		}else{
-			fprintf(stderr, "addi %s, %s, %s\n", REGISTERS_G[ops.d_idx], REGISTERS_G[ops.s_idx], REGISTERS_G[ops.t_idx]);
-		}
-	}else{
-		fprintf(stderr, "add.s %s, %s, %s\n", REGISTERS_G[ops.d_idx], REGISTERS_G[ops.s_idx], REGISTERS_G[ops.t_idx]);
-	}
-	return 1;
-}
-
-int print_inst_addi(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "addi %s, %s, $%d\n", REGISTERS_G[ops.t_idx], REGISTERS_G[ops.s_idx], ops.imm);
-	return 1;
-}
-
-int print_inst_and(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "and %s, %s, %s\n", REGISTERS_G[ops.d_idx], REGISTERS_G[ops.s_idx], REGISTERS_G[ops.t_idx]);
-	return 1;
-}
-
-int print_inst_andi(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "andi %s, %s, $%d\n", REGISTERS_G[ops.t_idx], REGISTERS_G[ops.s_idx], ops.imm);
-	return 1;
-}
-
-int print_inst_beq(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "beq %s, %s, $%d\n", REGISTERS_G[ops.t_idx], REGISTERS_G[ops.s_idx], ops.imm);
-	return 1;
-}
-
-int print_inst_bne(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "bne %s, %s, $%d\n", REGISTERS_G[ops.t_idx], REGISTERS_G[ops.s_idx], ops.imm);
-	return 1;
-}
-
-int print_inst_j(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "j %d\n", ops.imm);
-	return 1;
-}
-
-int print_inst_jal(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "jal %d\n", ops.imm);
-	return 1;
-}
-
-int print_inst_jr(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "jr %s\n", REGISTERS_G[ops.s_idx]);
-	return 1;
-}
-
-int print_inst_jral(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "jral %s\n", REGISTERS_G[ops.s_idx]);
-	return 1;
-}
-
-int print_inst_lw(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "lw %s, %d(%s)\n", REGISTERS_G[ops.t_idx], ops.imm, REGISTERS_G[ops.s_idx]);
-	return 1;
-}
-
-int print_inst_nor(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "nor %s, %s, %s\n", REGISTERS_G[ops.d_idx], REGISTERS_G[ops.s_idx], REGISTERS_G[ops.t_idx]);
-	return 1;
-}
-
-int print_inst_or(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "or %s, %s, %s\n", REGISTERS_G[ops.d_idx], REGISTERS_G[ops.s_idx], REGISTERS_G[ops.t_idx]);
-	return 1;
-}
-
-int print_inst_ori(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "ori %s, %s, $%d\n", REGISTERS_G[ops.t_idx], REGISTERS_G[ops.s_idx], ops.imm);
-	return 1;
-}
-
-int print_inst_slt(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "slt %s, %s, %s\n", REGISTERS_G[ops.d_idx], REGISTERS_G[ops.s_idx], REGISTERS_G[ops.t_idx]);
-	return 1;
-}
-
-int print_inst_slti(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "slti %s, %s, $%d\n", REGISTERS_G[ops.t_idx], REGISTERS_G[ops.s_idx], ops.imm);
-	return 1;
-}
-
-int print_inst_sll(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "sll %s, %s, $%d\n", REGISTERS_G[ops.d_idx], REGISTERS_G[ops.s_idx], ops.imm);
-	return 1;
-}
-
-int print_inst_srl(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "slr %s, %s, $%d\n", REGISTERS_G[ops.d_idx], REGISTERS_G[ops.s_idx], ops.imm);
-	return 1;
-}
-
-int print_inst_sw(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "sw %s, %d(%s)\n", REGISTERS_G[ops.t_idx], ops.imm, REGISTERS_G[ops.s_idx]);
+	fprintf(stderr, "inst_add\n");
 	return 1;
 }
 
 int print_inst_sub(simulator* sim_p, operands ops)
 {
-	fprintf(stderr, "sub %s, %s, %s\n", REGISTERS_G[ops.d_idx], REGISTERS_G[ops.s_idx], REGISTERS_G[ops.t_idx]);
+	fprintf(stderr, "inst_sub\n");
 	return 1;
 }
 
-int print_inst_bclt(simulator* sim_p, operands ops)
+int print_inst_mul(simulator* sim_p, operands ops)
 {
-	fprintf(stderr, "bclt %d\n", ops.imm);
-	return 1;
-}
-
-int print_inst_bclf(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "bclf %d\n", ops.imm);
+	fprintf(stderr, "inst_muls\n");
 	return 1;
 }
 
 int print_inst_div(simulator* sim_p, operands ops)
 {
-	fprintf(stderr, "div %s, %s, %s\n", REGISTERS_G[ops.d_idx], REGISTERS_G[ops.s_idx], REGISTERS_G[ops.t_idx]);
-	return 1;
-}
-
-extern uint32_t fadd(uint32_t, uint32_t);
-
-int print_inst_adds(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "fadd %s, %s, %s\n", REGISTERS_F[ops.d_idx], REGISTERS_F[ops.s_idx], REGISTERS_F[ops.t_idx]);
-	return 1;
-}
-
-int print_inst_cseq(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "c.eq.s %s, %s\n", REGISTERS_F[ops.t_idx], REGISTERS_F[ops.s_idx]);
-	return 1;
-}
-
-int print_inst_cslt(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "c.lt.s %s, %s\n", REGISTERS_F[ops.t_idx], REGISTERS_F[ops.s_idx]);
-	return 1;
-}
-
-int print_inst_csle(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "c.le.s %s, %s\n", REGISTERS_F[ops.t_idx], REGISTERS_F[ops.s_idx]);
-	return 1;
-}
-
-extern uint32_t fmul(uint32_t, uint32_t);
-
-typedef union myfloat_{
-	uint32_t muint;
-	float mfloat;
-}myfloat;
-
-int print_inst_muls(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "fmul %s, %s, %s\n", REGISTERS_F[ops.d_idx], REGISTERS_F[ops.s_idx], REGISTERS_F[ops.t_idx]);
+	fprintf(stderr, "inst_div\n");
 	return 1;
 }
 
 int print_inst_invs(simulator* sim_p, operands ops)
 {
-	fprintf(stderr, "finv %s, %s\n", REGISTERS_F[ops.d_idx], REGISTERS_F[ops.t_idx]);
+	fprintf(stderr, "inst_invs\n");
 	return 1;
 }
 
-int print_inst_divs(simulator* sim_p, operands ops)
+int print_inst_sqrts(simulator* sim_p, operands ops)
 {
-	//FDIV does not exist
+	fprintf(stderr, "inst_sqrts\n");
 	return 1;
 }
 
-int print_inst_subs(simulator* sim_p, operands ops)
+int print_inst_beq(simulator* sim_p, operands ops)
 {
-	fprintf(stderr, "fsub %s, %s, %s\n", REGISTERS_F[ops.d_idx], REGISTERS_F[ops.s_idx], REGISTERS_F[ops.t_idx]);
+	fprintf(stderr, "inst_beq\n");
 	return 1;
 }
 
-int print_inst_lws(simulator* sim_p, operands ops)
+int print_inst_blt(simulator* sim_p, operands ops)
 {
-	fprintf(stderr, "flw %s, %d(%s)\n", REGISTERS_F[ops.t_idx], ops.imm, REGISTERS_F[ops.s_idx]);
+	fprintf(stderr, "inst_blt\n");
 	return 1;
 }
 
-int print_inst_mult(simulator* sim_p, operands ops)
+int print_inst_ble(simulator* sim_p, operands ops)
 {
-	fprintf(stderr, "mult %s, %s, %s\n", REGISTERS_G[ops.d_idx], REGISTERS_G[ops.s_idx], REGISTERS_G[ops.t_idx]);
+	fprintf(stderr, "inst_ble\n");
 	return 1;
 }
 
-int print_inst_sws(simulator* sim_p, operands ops)
+int print_inst_j(simulator* sim_p, operands ops)
 {
-	fprintf(stderr, "fsw %s, %d(%s)\n", REGISTERS_F[ops.t_idx], ops.imm, REGISTERS_F[ops.s_idx]);
+	fprintf(stderr, "inst_j\n");
+	return 1;
+}
+
+int print_inst_jr(simulator* sim_p, operands ops)
+{
+	fprintf(stderr, "inst_jr\n");
+	return 1;
+}
+
+int print_inst_ld(simulator* sim_p, operands ops)
+{
+	fprintf(stderr, "inst_ld\n");
+	return 1;
+}
+
+int print_inst_st(simulator* sim_p, operands ops)
+{
+	fprintf(stderr, "inst_st\n");
+	return 1;
+}
+
+int print_inst_sll(simulator* sim_p, operands ops)
+{
+	fprintf(stderr, "inst_sll\n");
+	return 1;
+}
+
+int print_inst_srl(simulator* sim_p, operands ops)
+{
+	fprintf(stderr, "inst_srl\n");
+	return 1;
+}
+
+int print_inst_nop(simulator* sim_p, operands ops)
+{
+	fprintf(stderr, "inst_nop\n");
+	return 1;
+}
+
+int print_inst_itof(simulator* sim_p, operands ops)
+{
+	fprintf(stderr, "inst_itof\n");
+	return 1;
+}
+
+int print_inst_ftoi(simulator* sim_p, operands ops)
+{
+	fprintf(stderr, "inst_ftoi\n");
 	return 1;
 }
 
 int print_inst_in_(simulator* sim_p, operands ops)
 {
-	fprintf(stderr, "in %s\n", REGISTERS_F[ops.s_idx]);
+	fprintf(stderr, "inst_in_\n");
 	return 1;
 }
 
 int print_inst_out(simulator* sim_p, operands ops)
 {
-	fprintf(stderr, "out %s\n", REGISTERS_F[ops.s_idx]);
+	fprintf(stderr, "inst_out\n");
 	return 1;
 }
 
 int print_inst_hlt(simulator* sim_p, operands ops)
 {
+	fprintf(stderr, "inst_hlt\n");
 	return 0;
 }
 
