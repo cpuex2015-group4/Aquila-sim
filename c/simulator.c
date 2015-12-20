@@ -177,6 +177,9 @@ void load_binary(simulator* sim, FILE* fp)
 	load_data(sim, buf);
 
 	//sim->reg[28] = sim->text_size + sim->data_size; //heap pointer 
+	sim->pc = sim->entry_point;
+	sim->pc = 0;
+	//fprintf(stderr, "sim->pc = %d\n", sim->pc);
 	sim->reg[28] = 0x10000 + sim->data_size; //heap pointer 
 	sim->reg[29] = 0xfffff;  //stack pointer 0xfffff
 
@@ -654,7 +657,6 @@ void simulate(simulator* sim_p)
 	unsigned char function_binary;
 	unsigned char xs_binary;
 	int res = 0;
-	sim_p->pc = sim_p->entry_point;
 
 	int (*simulate_inst_p)(simulator*, instruction, unsigned char, unsigned char, unsigned char, unsigned char);
 	if(IS_DEBUG){
