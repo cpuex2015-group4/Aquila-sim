@@ -75,8 +75,7 @@ simulator *init_sim()
 		sim->f_reg[i] = 0.0;
 	}
 
-	//memset(sim->f_reg, 0, (sizeof(float) * 32));
-	sim->reg[29] = 1048575;  //stack pointer 0xfffff
+	sim->reg[29] = 0xfffff;  //stack pointer 0xfffff
 	sim->mem = calloc(sizeof(int), MEM_SIZE);
 	return sim;
 }
@@ -177,8 +176,9 @@ void load_binary(simulator* sim, FILE* fp)
 	load_instruction(sim, buf);
 	load_data(sim, buf);
 
-	sim->reg[28] = sim->text_size + sim->data_size; //heap pointer 
-	sim->reg[29] = 1048575;  //stack pointer 0xfffff
+	//sim->reg[28] = sim->text_size + sim->data_size; //heap pointer 
+	sim->reg[28] = 0x10000 + sim->data_size; //heap pointer 
+	sim->reg[29] = 0xfffff;  //stack pointer 0xfffff
 
 	if(STATISTICS) {
 		sim->called_count_table = calloc(sizeof(unsigned int), sim->text_size);
