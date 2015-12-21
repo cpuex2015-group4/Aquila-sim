@@ -178,7 +178,6 @@ void load_binary(simulator* sim, FILE* fp)
 
 	//sim->reg[28] = sim->text_size + sim->data_size; //heap pointer 
 	sim->pc = sim->entry_point;
-	sim->pc = 0;
 	//fprintf(stderr, "sim->pc = %d\n", sim->pc);
 	sim->reg[28] = 0x10000 + sim->data_size; //heap pointer 
 	sim->reg[29] = 0xfffff;  //stack pointer 0xfffff
@@ -666,10 +665,10 @@ void simulate(simulator* sim_p)
 	}
 	while(1){
 		inst = 0;
-		inst = load_char(inst, inst2char(sim_p->inst_mem[sim_p->pc], 0), 0);
-		inst = load_char(inst, inst2char(sim_p->inst_mem[sim_p->pc], 1), 1);
-		inst = load_char(inst, inst2char(sim_p->inst_mem[sim_p->pc], 2), 2);
-		inst = load_char(inst, inst2char(sim_p->inst_mem[sim_p->pc], 3), 3);
+		inst = load_char(inst, inst2char(sim_p->inst_mem[sim_p->pc - 0x400], 0), 0);
+		inst = load_char(inst, inst2char(sim_p->inst_mem[sim_p->pc - 0x400], 1), 1);
+		inst = load_char(inst, inst2char(sim_p->inst_mem[sim_p->pc - 0x400], 2), 2);
+		inst = load_char(inst, inst2char(sim_p->inst_mem[sim_p->pc - 0x400], 3), 3);
 
 		i_binary = get_binary_unsigned(inst, 0, 1);
 		operation_binary = get_binary_unsigned(inst, 1, 6);
