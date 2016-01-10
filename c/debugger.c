@@ -1,4 +1,7 @@
 #include <stdio.h>
+#include <lua.h>
+#include <lauxlib.h>
+#include <lualib.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
@@ -6,6 +9,7 @@
 #include "./utils.h"
 #include "./simulator.h"
 #include "./debugger.h"
+
 #define handle_error(msg) \
 	do { perror(msg); exit(EXIT_FAILURE); } while (0)
 /*
@@ -368,7 +372,17 @@ int simulate_inst_debug(simulator* sim_p, instruction inst, unsigned char i_bina
 		print_inst(sim_p, inst, i_binary, operation_binary, function_binary, xs_binary);
 
 		fprintf(stderr, "%s", PROMPT);
+		/*
+		 * below process is passed to Lua script
+		 */
+		// Lua の言語エンジンを初期化
+		lua_State *lua = luaL_newstate();
+		// Lua のライブラリを使えるようにする
+		luaL_openlibs(lua);
+		// Lua のスクリプトを読み込む
+		printf("%d\n", luaL_dofile(lua, "./debugger.lua"));
 
+		/*
 		scanf("%[^\n]", input);
 		getchar(); //dummy to throw \n away
 
@@ -398,6 +412,7 @@ int simulate_inst_debug(simulator* sim_p, instruction inst, unsigned char i_bina
 
 		fprintf(stderr, "invalid command\n");
 		continue;
+		*/
 	}
 	return simulate_inst(sim_p, inst, i_binary, operation_binary, function_binary, xs_binary);
 }
