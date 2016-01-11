@@ -20,20 +20,38 @@ function split(str, delimiter)
 end
 
 function parse_input(str)
+	--[[
+	args :
+		string 
+	returns :
+		(int a, int b)
+		a
+		-------------------
+		0 -> error
+		1 -> next
+		2 -> continue
+		3 -> break
+
+		b
+		------------------
+		when break
+			break number
+			
+	--]]
 	elms = split(str, ' ')
 	ope = elms[1]
 	arg = elms[2]
 	if ope == 'next' or ope == 'n' then
-		print('next')
+		return 1, 0
 	elseif ope == 'continue' or ope == 'c' then
-		print('continue')
+		return 2, 0
 	elseif ope == 'break' or ope == 'b' then
-		print('break')
+		return 3, tonumber(arg)
 	end
 end
 
-while true do
+function interpret()
 	input = io.read()
-	res = parse_input(input)
+	return parse_input(input)
 end
 

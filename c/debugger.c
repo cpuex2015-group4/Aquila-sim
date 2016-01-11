@@ -349,8 +349,6 @@ int breakpoint[10000000] = {}; // breakpoint[pc] is 1 if pc==breakpoint else 0
 
 int simulate_inst_debug(simulator* sim_p, instruction inst, unsigned char i_binary, unsigned char operation_binary, unsigned char function_binary, unsigned char xs_binary)
 {
-	char input[100];
-	int pc;
 	while(1){
 		if(is_running && !breakpoint[sim_p->pc])break; //if not breakpoint && some breakpoint is set, run continuously
 
@@ -380,39 +378,54 @@ int simulate_inst_debug(simulator* sim_p, instruction inst, unsigned char i_bina
 		// Lua のライブラリを使えるようにする
 		luaL_openlibs(lua);
 		// Lua のスクリプトを読み込む
-		printf("%d\n", luaL_dofile(lua, "./debugger.lua"));
-
+		if( luaL_loadfile(lua, "./debugger.lua") || lua_pcall(lua, 0, 0, 0) ) {
+			printf("debugger.luaを開けませんでした\n");
+			printf("error : %s\n", lua_tostring(lua, -1) );
+			return 1;
+		}
 		/*
-		scanf("%[^\n]", input);
-		getchar(); //dummy to throw \n away
+		 * call the function 'interpret' in Lua Script
+		 */
+		 //add関数をスタックに積む
+		lua_getglobal(lua, "interpret");
+		if(lua_pcall(lua, 0, 2, 0) != 0) {
+			printf("関数呼び出し失敗\n");
+			printf("error : %s\n", lua_tostring(lua, -1) );
+			return 1;
+		}
 
-		if(strcmp(input, "next") == 0){
+		int ope = 0;
+		int arg = 0;
+
+		if(lua_isnumber(lua, -1)){
+			arg = lua_tointeger(lua, -1);
+			lua_pop(lua,1); //戻り値をポップ
+		}
+
+		if(lua_isnumber(lua, -1)){
+			ope = lua_tointeger(lua, -1);
+			lua_pop(lua,1); //戻り値をポップ
+		}
+
+		if(ope == 1){
 			break;
 		}
 
-		if(strcmp(input, "continue") == 0){
+		if(ope == 2){
 			is_running = 1;
 			break;
 		}
 
-		if(strcmp("continue", input) < 0 && strcmp(input, "continue~") < 0){ //command == break && exists argument
-			pc = get_break_point(input);
-			if(breakpoint[pc]){
+		if(ope == 3){
+			if(breakpoint[arg]){
 				continue;
 			}
-			breakpoint[pc] = 1;
+			breakpoint[arg] = 1;
 			breakpoint_cnt++;
 			continue;
 		}
 
-		if(strcmp("break", input) == 0){
-			fprintf(stderr, "break nees a argument\n");
-			continue;
-		}
-
-		fprintf(stderr, "invalid command\n");
 		continue;
-		*/
 	}
 	return simulate_inst(sim_p, inst, i_binary, operation_binary, function_binary, xs_binary);
 }
