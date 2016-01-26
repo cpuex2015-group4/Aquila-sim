@@ -235,6 +235,38 @@ int print_inst_hlt(simulator* sim_p, operands ops)
 	return 0;
 }
 
+void print_mem(simulator* sim)
+{
+	int i;
+	fprintf(stderr, "------------------mem---------------\n");
+	for(i = 0; i < MEM_SIZE; i++){
+		if(sim->mem[i] != 0){
+			fprintf(stderr, "mem[%d] = %d\n", i, sim->mem[i]);
+		}
+	}
+	return;
+}
+
+void print_reg(simulator* sim)
+{
+	int i;
+	fprintf(stderr, "------------------reg---------------\n");
+	for(i = 0; i < 32; i++){
+		fprintf(stderr, "reg[%d] = %d\n", i, sim->reg[i]);
+	}
+	return;
+}
+
+void print_f_reg(simulator* sim)
+{
+	int i;
+	fprintf(stderr, "------------------freg---------------\n");
+	for(i = 0; i < 32; i++){
+		fprintf(stderr, "freg[%d] = %f\n", i, sim->f_reg[i]);
+	}
+	return;
+}
+
 int print_inst(simulator* sim_p, instruction inst, unsigned char i_binary, unsigned char operation_binary, unsigned char function_binary, unsigned char xs_binary)
 {
 	unsigned char opt_binary = get_binary_unsigned(inst, 2, 4);
@@ -408,21 +440,47 @@ int simulate_inst_debug(simulator* sim_p, instruction inst, unsigned char i_bina
 			lua_pop(lua,1); //戻り値をポップ
 		}
 
+		printf("ope == %d, arg == %d\n", ope, arg);
+		
 		if(ope == 1){
+			/*
+			 * next
+			 */
 			break;
 		}
 
 		if(ope == 2){
+			/*
+			 * continue
+			 */
 			is_running = 1;
 			break;
 		}
 
 		if(ope == 3){
+			/*
+			 * break
+			 */
 			if(breakpoint[arg]){
 				continue;
 			}
 			breakpoint[arg] = 1;
 			breakpoint_cnt++;
+			continue;
+		}
+
+		if(ope == 4){
+			/*
+			 * dump
+			 */
+			if(arg == 0){
+				print_reg(sim_p);
+			}else if(arg == 1){
+				print_f_reg(sim_p);
+			}else if(arg == 2){
+				print_reg(sim_p);
+				print_f_reg(sim_p);
+			}
 			continue;
 		}
 
@@ -432,37 +490,6 @@ int simulate_inst_debug(simulator* sim_p, instruction inst, unsigned char i_bina
 }
 
 
-void print_mem(simulator* sim)
-{
-	int i;
-	fprintf(stderr, "------------------mem---------------\n");
-	for(i = 0; i < MEM_SIZE; i++){
-		if(sim->mem[i] != 0){
-			fprintf(stderr, "mem[%d] = %d\n", i, sim->mem[i]);
-		}
-	}
-	return;
-}
-
-void print_reg(simulator* sim)
-{
-	int i;
-	fprintf(stderr, "------------------reg---------------\n");
-	for(i = 0; i < 32; i++){
-		fprintf(stderr, "reg[%d] = %d\n", i, sim->reg[i]);
-	}
-	return;
-}
-
-void print_f_reg(simulator* sim)
-{
-	int i;
-	fprintf(stderr, "------------------freg---------------\n");
-	for(i = 0; i < 32; i++){
-		fprintf(stderr, "freg[%d] = %f\n", i, sim->f_reg[i]);
-	}
-	return;
-}
 
 void segfault_sigaction(int signal, siginfo_t *si, void *arg)
 {

@@ -647,6 +647,8 @@ int simulate_inst(simulator* sim_p, instruction inst, unsigned char i_binary,  u
 }
 
 extern int simulate_inst_debug(simulator* , instruction, unsigned char, unsigned char, unsigned char, unsigned char);
+extern void print_reg(simulator*);
+extern void print_f_reg(simulator*);
 
 void simulate(simulator* sim_p)
 {
@@ -694,5 +696,7 @@ void simulate(simulator* sim_p)
 	 * ---------------------------------------
 	 *  Format:  "int:[int_res],float:[float_res]"
 	 */
+	print_reg(sim_p);
+	print_f_reg(sim_p);
 	fprintf(stderr, "int:%d,float:%.8f\n", sim_p->reg[2], sim_p->f_reg[2]);
 }

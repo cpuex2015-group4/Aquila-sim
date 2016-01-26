@@ -31,22 +31,35 @@ function parse_input(str)
 		1 -> next
 		2 -> continue
 		3 -> break
+		4 -> dump reg
 
 		b
 		------------------
 		when break
 			break number
+		when dump 
+			0(default) -> regular
+			1 -> float
+			2 -> both
 			
 	--]]
 	elms = split(str, ' ')
 	ope = elms[1]
 	arg = elms[2]
+	print(ope)
+	print(arg)
 	if ope == 'next' or ope == 'n' then
 		return 1, 0
 	elseif ope == 'continue' or ope == 'c' then
 		return 2, 0
 	elseif ope == 'break' or ope == 'b' then
 		return 3, tonumber(arg)
+	elseif ope == 'dump' or ope == 'd' then
+		if arg == nil then
+			return 4, 0
+		else
+			return 4, tonumber(arg)
+		end
 	end
 end
 
