@@ -240,7 +240,8 @@ int print_inst(simulator* sim_p, instruction inst, unsigned char i_binary, unsig
 	unsigned char opt_binary = get_binary_unsigned(inst, 2, 4);
 	operands ops; 
 
-	if(i_binary == 0 && xs_binary == 0){
+	print_int2bin(inst);
+	if(i_binary == 0 && operation_binary == 0 && xs_binary == 0){
 		/*
 		 * Format X
 		 */

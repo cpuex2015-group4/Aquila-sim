@@ -538,7 +538,7 @@ int simulate_inst(simulator* sim_p, instruction inst, unsigned char i_binary,  u
 	unsigned char opt_binary = get_binary_unsigned(inst, 2, 4);
 	operands ops; 
 
-	if(i_binary == 0 && xs_binary == 0){
+	if(i_binary == 0 && operation_binary == 0 && xs_binary == 0){
 		/*
 		 * Format X
 		 */
