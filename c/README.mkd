@@ -1,3 +1,21 @@
 ###Aquila Simulator
 ---
+####Debug Command
 
+##### next | n
+same as gcd
+
+##### continue | c
+same as gcd
+
+##### break | b
+same as gcd
+
+##### dump | d
+Dump Register Contents  
+
+Arg 
+
+- 0(default) -> RGR
+- 1 -> FGR
+- 2 -> Both
