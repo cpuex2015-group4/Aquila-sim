@@ -157,8 +157,8 @@ void load_data(simulator* sim, unsigned char* buf)
 		data = load_char(data, buf[(i + sim->text_size) * 4 + 1 + OFFSET], 1);
 		data = load_char(data, buf[(i + sim->text_size) * 4 + 2 + OFFSET], 2);
 		data = load_char(data, buf[(i + sim->text_size) * 4 + 3 + OFFSET], 3);
-		sim->mem[(sim->text_size + i)] = data;
-		printf("load data = %f\n", int2float(data));
+		sim->mem[(sim->text_size + i)] = 1065353216;
+		print_int2bin(sim->mem[(sim->text_size + i)]);
 	}
 	return;
 }
