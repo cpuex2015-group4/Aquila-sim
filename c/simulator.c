@@ -448,9 +448,9 @@ int inst_ld(simulator* sim_p, operands ops)
 	if(INST_CNT)inst_cnt_arr[INST_LW_IDX]++;
 	int reg_s = sim_p->reg[ops.s_idx];
 	if(ops.rorf == 0){
-		sim_p->reg[ops.t_idx] = sim_p->mem[reg_s + ops.imm];
+		sim_p->reg[ops.d_idx] = sim_p->mem[reg_s + ops.imm];
 	}else{
-		sim_p->f_reg[ops.t_idx] = int2float(sim_p->mem[reg_s + ops.imm]);
+		sim_p->f_reg[ops.d_idx] = int2float(sim_p->mem[reg_s + ops.imm]);
 	}
 	sim_p->pc++;
 	return 1;
@@ -461,9 +461,9 @@ int inst_st(simulator* sim_p, operands ops)
 	if(INST_CNT)inst_cnt_arr[INST_SW_IDX]++;
 	int reg_s = sim_p->reg[ops.s_idx];
 	if(ops.rorf == 0){
-		sim_p->mem[reg_s + ops.imm] = sim_p->reg[ops.t_idx]; 
+		sim_p->mem[reg_s + ops.imm] = sim_p->reg[ops.d_idx]; 
 	}else{
-		sim_p->mem[reg_s + ops.imm] = float2int(sim_p->f_reg[ops.t_idx]);
+		sim_p->mem[reg_s + ops.imm] = float2int(sim_p->f_reg[ops.d_idx]);
 	}
 	sim_p->pc++;
 	return 1;
