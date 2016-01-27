@@ -158,6 +158,7 @@ void load_data(simulator* sim, unsigned char* buf)
 		data = load_char(data, buf[(i + sim->text_size) * 4 + 2 + OFFSET], 2);
 		data = load_char(data, buf[(i + sim->text_size) * 4 + 3 + OFFSET], 3);
 		sim->mem[(sim->text_size + i)] = data;
+		printf("load data = %f\n", int2float(data));
 	}
 	return;
 }
@@ -447,6 +448,10 @@ int inst_ld(simulator* sim_p, operands ops)
 {
 	if(INST_CNT)inst_cnt_arr[INST_LW_IDX]++;
 	int reg_s = sim_p->reg[ops.s_idx];
+	printf("reg_s = %d\n", reg_s);
+	printf("imm = %d\n", ops.imm);
+	printf("sim_p->mem[reg_s + ops.imm] = ");
+	print_int2bin(sim_p->mem[reg_s + ops.imm]);
 	if(ops.rorf == 0){
 		sim_p->reg[ops.d_idx] = sim_p->mem[reg_s + ops.imm];
 	}else{
