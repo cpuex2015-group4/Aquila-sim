@@ -130,7 +130,8 @@ void load_header(simulator* sim, unsigned char* buf)
 	sim->entry_point = load_char(sim->entry_point, buf[13], 1);
 	sim->entry_point = load_char(sim->entry_point, buf[14], 2);
 	sim->entry_point = load_char(sim->entry_point, buf[15], 3);
-	fprintf(stderr, "text_size = %d, data_size = %d, entry_point = %d\n", sim->text_size, sim->data_size, sim->entry_point);
+	if(IS_DEBUG)
+		fprintf(stderr, "text_size = %d, data_size = %d, entry_point = %d\n", sim->text_size, sim->data_size, sim->entry_point);
 	return;
 }
 
@@ -160,8 +161,6 @@ void load_data(simulator* sim, unsigned char* buf)
 		data = load_char(data, buf[(i + sim->text_size) * 4 + 2 + OFFSET], 2);
 		data = load_char(data, buf[(i + sim->text_size) * 4 + 3 + OFFSET], 3);
 		sim->mem[(DATA_OFFSET + i)] = data;
-		print_int2bin(data);
-		print_int2bin(float2int(1.0));
 	}
 	return;
 }
@@ -451,10 +450,6 @@ int inst_ld(simulator* sim_p, operands ops)
 {
 	if(INST_CNT)inst_cnt_arr[INST_LW_IDX]++;
 	int reg_s = sim_p->reg[ops.s_idx];
-	printf("reg_s = %d\n", reg_s);
-	printf("imm = %d\n", ops.imm);
-	printf("sim_p->mem[reg_s + ops.imm] = ");
-	print_int2bin(sim_p->mem[reg_s + ops.imm]);
 	if(ops.rorf == 0){
 		sim_p->reg[ops.d_idx] = sim_p->mem[reg_s + ops.imm];
 	}else{
@@ -704,7 +699,5 @@ void simulate(simulator* sim_p)
 	 * ---------------------------------------
 	 *  Format:  "int:[int_res],float:[float_res]"
 	 */
-	print_reg(sim_p);
-	print_f_reg(sim_p);
 	fprintf(stderr, "int:%d,float:%.8f\n", sim_p->reg[2], sim_p->f_reg[2]);
 }

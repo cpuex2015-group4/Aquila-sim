@@ -412,8 +412,8 @@ int simulate_inst_debug(simulator* sim_p, instruction inst, unsigned char i_bina
 		luaL_openlibs(lua);
 		// Lua のスクリプトを読み込む
 		if( luaL_loadfile(lua, "./debugger.lua") || lua_pcall(lua, 0, 0, 0) ) {
-			printf("debugger.luaを開けませんでした\n");
-			printf("error : %s\n", lua_tostring(lua, -1) );
+			fprintf(stderr, "debugger.luaを開けませんでした\n");
+			fprintf(stderr, "error : %s\n", lua_tostring(lua, -1) );
 			return 1;
 		}
 		/*
@@ -422,8 +422,8 @@ int simulate_inst_debug(simulator* sim_p, instruction inst, unsigned char i_bina
 		 //add関数をスタックに積む
 		lua_getglobal(lua, "interpret");
 		if(lua_pcall(lua, 0, 2, 0) != 0) {
-			printf("関数呼び出し失敗\n");
-			printf("error : %s\n", lua_tostring(lua, -1) );
+			fprintf(stderr, "関数呼び出し失敗\n");
+			fprintf(stderr, "error : %s\n", lua_tostring(lua, -1) );
 			return 1;
 		}
 
@@ -440,7 +440,7 @@ int simulate_inst_debug(simulator* sim_p, instruction inst, unsigned char i_bina
 			lua_pop(lua,1); //戻り値をポップ
 		}
 
-		printf("ope == %d, arg == %d\n", ope, arg);
+		fprintf(stderr, "ope == %d, arg == %d\n", ope, arg);
 		
 		if(ope == 1){
 			/*
