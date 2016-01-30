@@ -130,6 +130,7 @@ void load_header(simulator* sim, unsigned char* buf)
 	sim->entry_point = load_char(sim->entry_point, buf[13], 1);
 	sim->entry_point = load_char(sim->entry_point, buf[14], 2);
 	sim->entry_point = load_char(sim->entry_point, buf[15], 3);
+	fprintf(stderr, "text_size = %d, data_size = %d, entry_point = %d\n", sim->text_size, sim->data_size, sim->entry_point);
 	return;
 }
 
@@ -149,6 +150,7 @@ void load_instruction(simulator* sim, unsigned char* buf)
 void load_data(simulator* sim, unsigned char* buf)
 {
 	int OFFSET = 16;
+	int DATA_OFFSET = 0x7f00;
 	int i;
 	int data;
 	for(i = 0; (i + sim->text_size) * 4 + OFFSET < sim->binary_size; i++){
@@ -157,8 +159,10 @@ void load_data(simulator* sim, unsigned char* buf)
 		data = load_char(data, buf[(i + sim->text_size) * 4 + 1 + OFFSET], 1);
 		data = load_char(data, buf[(i + sim->text_size) * 4 + 2 + OFFSET], 2);
 		data = load_char(data, buf[(i + sim->text_size) * 4 + 3 + OFFSET], 3);
-		sim->mem[(sim->text_size + i)] = 1065353216;
-		print_int2bin(sim->mem[(sim->text_size + i)]);
+		sim->mem[(DATA_OFFSET + i)] = data;
+		sim->mem[(DATA_OFFSET + i)] = float2int(1.0);
+		print_int2bin(data);
+		print_int2bin(float2int(1.0));
 	}
 	return;
 }
