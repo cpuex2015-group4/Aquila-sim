@@ -160,7 +160,6 @@ void load_data(simulator* sim, unsigned char* buf)
 		data = load_char(data, buf[(i + sim->text_size) * 4 + 2 + OFFSET], 2);
 		data = load_char(data, buf[(i + sim->text_size) * 4 + 3 + OFFSET], 3);
 		sim->mem[(DATA_OFFSET + i)] = data;
-		sim->mem[(DATA_OFFSET + i)] = float2int(1.0);
 		print_int2bin(data);
 		print_int2bin(float2int(1.0));
 	}
