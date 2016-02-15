@@ -489,8 +489,6 @@ int simulate_inst_debug(simulator* sim_p, instruction inst, unsigned char i_bina
 	return simulate_inst(sim_p, inst, i_binary, operation_binary, function_binary, xs_binary);
 }
 
-
-
 void segfault_sigaction(int signal, siginfo_t *si, void *arg)
 {
 	/*
