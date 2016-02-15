@@ -1,7 +1,4 @@
 #include <stdio.h>
-#include <lua.h>
-#include <lauxlib.h>
-#include <lualib.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
@@ -12,6 +9,8 @@
 
 #define handle_error(msg) \
 	do { perror(msg); exit(EXIT_FAILURE); } while (0)
+
+#define BUF_SIZE 1024
 /*
  *
  * 88        88           88  88           
@@ -42,6 +41,8 @@
 extern int MEM_SIZE;
 extern int SIGUNATURE; 
 char* PROMPT = "Hdb > ";
+char SCAN_BUF[BUF_SIZE];
+const char SEPS[10] = " \t\n";
 
 static simulator sim_previous;
 static instruction inst_previous;
@@ -373,6 +374,64 @@ int print_inst(simulator* sim_p, instruction inst, unsigned char i_binary, unsig
 	return -1;
 }
 
+typedef struct query_{
+	/*
+	 * 1 -> next
+	 * 2 -> continue
+	 * 3 -> break
+	 * 4 -> dump
+	 *
+	 * -1 -> invalid argument
+	 */
+	int operation;
+	/*
+	 * when break
+	 *   arg := breakpoint
+	 * when dump
+	 *   0 -> RGP
+	 *   1 -> FGP
+	 *   2 -> BOTH
+	 */
+	int argument;
+}query;
+
+
+query parse_input(char* input)
+{
+	/*
+	 * tokenは最大でも2つ
+	 */
+	query q;
+	char* str;
+	str = strtok(input, SEPS);
+	if(str == NULL){
+			q.operation = -1;
+			return q;
+	}else{
+		if(strcmp(str, "next") * strcmp(str, "n") == 0){
+			q.operation = 1;
+			return q;
+		}else if(strcmp(str, "continue") * strcmp(str, "c") == 0){
+			q.operation = 2;
+			return q;
+		}else if(strcmp(str, "break") * strcmp(str, "b") == 0){
+			q.operation = 3;
+		}else if(strcmp(str, "dump") * strcmp(str, "d") == 0){
+			q.operation = 4;
+		}else{
+			q.operation = -1;
+			return q;
+		}
+	}
+	str = strtok(NULL, SEPS);
+	if(str == NULL){
+		return q;
+	}else{
+		q.argument = atoi(str);
+	}
+	return q;
+}
+
 /*
  * Debugger Global Variable
  */
@@ -382,16 +441,17 @@ int breakpoint[10000000] = {}; // breakpoint[pc] is 1 if pc==breakpoint else 0
 
 int simulate_inst_debug(simulator* sim_p, instruction inst, unsigned char i_binary, unsigned char operation_binary, unsigned char function_binary, unsigned char xs_binary)
 {
+	query q;
 	while(1){
-		if(is_running && !breakpoint[sim_p->pc])break; //if not breakpoint && some breakpoint is set, run continuously
+		if(is_running && !breakpoint[sim_p->pc - PC_OFFSET])break; //if not breakpoint && some breakpoint is set, run continuously
 
-		if(breakpoint[sim_p->pc]){
-			breakpoint[sim_p->pc] = 0;
+		if(breakpoint[sim_p->pc - PC_OFFSET]){
+			breakpoint[sim_p->pc - PC_OFFSET] = 0;
 			breakpoint_cnt--;
 			is_running = 0;
 		}
 
-		fprintf(stderr, "%lu : ", sim_p->pc);
+		fprintf(stderr, "%lu : ", sim_p->pc - PC_OFFSET);
 
 		sim_previous = *sim_p;
 		inst_previous = inst;
@@ -402,54 +462,31 @@ int simulate_inst_debug(simulator* sim_p, instruction inst, unsigned char i_bina
 
 		print_inst(sim_p, inst, i_binary, operation_binary, function_binary, xs_binary);
 
-		fprintf(stderr, "%s", PROMPT);
-		/*
-		 * below process is passed to Lua script
-		 */
-		// Lua の言語エンジンを初期化
-		lua_State *lua = luaL_newstate();
-		// Lua のライブラリを使えるようにする
-		luaL_openlibs(lua);
-		// Lua のスクリプトを読み込む
-		if( luaL_loadfile(lua, "./debugger.lua") || lua_pcall(lua, 0, 0, 0) ) {
-			fprintf(stderr, "debugger.luaを開けませんでした\n");
-			fprintf(stderr, "error : %s\n", lua_tostring(lua, -1) );
-			return 1;
-		}
-		/*
-		 * call the function 'interpret' in Lua Script
-		 */
-		 //add関数をスタックに積む
-		lua_getglobal(lua, "interpret");
-		if(lua_pcall(lua, 0, 2, 0) != 0) {
-			fprintf(stderr, "関数呼び出し失敗\n");
-			fprintf(stderr, "error : %s\n", lua_tostring(lua, -1) );
-			return 1;
-		}
+		do{
+			fprintf(stderr, "%s", PROMPT);
+			fgets(SCAN_BUF, BUF_SIZE, stdin);
+			q = parse_input(SCAN_BUF);
+			switch(q.operation){
+				case -1:
+					fprintf(stderr, "invalid argument");
+					break;
+				case -2:
+					break;
+				case -3:
+					break;
+				case -4:
+					break;
+			}
+		}while(q.argument < 0);
 
-		int ope = 0;
-		int arg = 0;
-
-		if(lua_isnumber(lua, -1)){
-			arg = lua_tointeger(lua, -1);
-			lua_pop(lua,1); //戻り値をポップ
-		}
-
-		if(lua_isnumber(lua, -1)){
-			ope = lua_tointeger(lua, -1);
-			lua_pop(lua,1); //戻り値をポップ
-		}
-
-		fprintf(stderr, "ope == %d, arg == %d\n", ope, arg);
-		
-		if(ope == 1){
+		if(q.operation == 1){
 			/*
 			 * next
 			 */
 			break;
 		}
 
-		if(ope == 2){
+		if(q.operation == 2){
 			/*
 			 * continue
 			 */
@@ -457,27 +494,28 @@ int simulate_inst_debug(simulator* sim_p, instruction inst, unsigned char i_bina
 			break;
 		}
 
-		if(ope == 3){
+		if(q.operation == 3){
 			/*
 			 * break
 			 */
-			if(breakpoint[arg]){
+			printf("break point = %d\n", q.argument);
+			if(breakpoint[q.argument]){
 				continue;
 			}
-			breakpoint[arg] = 1;
+			breakpoint[q.argument] = 1;
 			breakpoint_cnt++;
 			continue;
 		}
 
-		if(ope == 4){
+		if(q.operation == 4){
 			/*
 			 * dump
 			 */
-			if(arg == 0){
+			if(q.argument == 0){
 				print_reg(sim_p);
-			}else if(arg == 1){
+			}else if(q.argument == 1){
 				print_f_reg(sim_p);
-			}else if(arg == 2){
+			}else if(q.argument == 2){
 				print_reg(sim_p);
 				print_f_reg(sim_p);
 			}
@@ -523,6 +561,5 @@ void main_debugger(void)
 	sa.sa_sigaction = segfault_sigaction;
 	sa.sa_flags = SA_SIGINFO;
 	sigaction(SIGSEGV, &sa, NULL);
-	
 }
 

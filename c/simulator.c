@@ -6,10 +6,12 @@
 #include "./utils.h"
 #include "./simulator.h"
 
+
 extern int MEM_SIZE;
 extern int INST_CNT;
 extern int STATISTICS;
 extern int IS_DEBUG;
+
 
 char* REG_ARR[] = {""};
 
@@ -670,10 +672,10 @@ void simulate(simulator* sim_p)
 	}
 	while(1){
 		inst = 0;
-		inst = load_char(inst, inst2char(sim_p->inst_mem[sim_p->pc - 0x400], 0), 0);
-		inst = load_char(inst, inst2char(sim_p->inst_mem[sim_p->pc - 0x400], 1), 1);
-		inst = load_char(inst, inst2char(sim_p->inst_mem[sim_p->pc - 0x400], 2), 2);
-		inst = load_char(inst, inst2char(sim_p->inst_mem[sim_p->pc - 0x400], 3), 3);
+		inst = load_char(inst, inst2char(sim_p->inst_mem[sim_p->pc - PC_OFFSET], 0), 0);
+		inst = load_char(inst, inst2char(sim_p->inst_mem[sim_p->pc - PC_OFFSET], 1), 1);
+		inst = load_char(inst, inst2char(sim_p->inst_mem[sim_p->pc - PC_OFFSET], 2), 2);
+		inst = load_char(inst, inst2char(sim_p->inst_mem[sim_p->pc - PC_OFFSET], 3), 3);
 
 		i_binary = get_binary_unsigned(inst, 0, 1);
 		operation_binary = get_binary_unsigned(inst, 1, 6);

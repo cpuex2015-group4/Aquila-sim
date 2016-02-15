@@ -2,6 +2,8 @@
 #define SIMLULATOR_H
 #define SAFE_DELETE(x) {free(x);(x)=NULL;}
 
+static const long PC_OFFSET = 0x400;
+
 typedef unsigned int instruction;
 
 typedef struct simulator_{
