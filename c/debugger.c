@@ -6,6 +6,7 @@
 #include "./utils.h"
 #include "./simulator.h"
 #include "./debugger.h"
+#include "./disassemble.h"
 
 #define handle_error(msg) \
 	do { perror(msg); exit(EXIT_FAILURE); } while (0)
@@ -77,21 +78,6 @@ int get_break_point(char* input)
 	return pc;
 }
 
-char* REGISTERS_G[] = {"\%zero", "\%at",
-	"\%v0", "\%v1",
-	"\%a0", "\%a1", "\%a2", "\%a3",
-	"\%t0", "\%t1", "\%t2", "\%t3", "\%t4", "\%t5", "\%t6", "\%t7",
-	"\%s0", "\%s1", "\%s2", "\%s3", "\%s4", "\%s5", "\%s6", "\%s7",
-	"\%t8", "\%t9",
-	"\%k0", "\%k1",
-	"\%gp", "\%sp", "\%fp", "\%ra"};
-
-char* REGISTERS_F[] = {"\%f0", "\%f1", "\%f2", "\%f3", "\%f4", "\%f5", "\%f6",
-   	"\%f7", "\%f8", "\%f9", "\%f10", "\%f11", "\%f12",
-   	"\%f13", "\%f14", "\%f15", "\%f16", "\%f17", "\%f18",
-   	"\%f19", "\%f20", "\%f21", "\%f22", "\%f23", "\%f24",
-	"\%f25", "\%f26", "\%f27", "\%f28", "\%f29", "\%f30",
-   	"\%f31"};
 
 typedef union myfloat_{
 	uint32_t muint;
@@ -279,6 +265,7 @@ int print_inst(simulator* sim_p, instruction inst, unsigned char i_binary, unsig
 		 * Format X
 		 */
 		ops = decode_X(inst);
+		disassemble(inst, ops);
 		switch(function_binary){
 			case 0:
 				return print_inst_hlt(sim_p, ops);

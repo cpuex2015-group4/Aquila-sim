@@ -6,7 +6,7 @@ SRC_MAIN=main.c
 SRC_UTILS=utils.c
 SRC_SIM=simulator.c
 FPUDIR=../fpu/
-OBJS=main.o utils.o simulator.o debugger.o fadd.o fmul.o finv.o fpu.o 
+OBJS=main.o utils.o simulator.o disassemble.o  debugger.o fadd.o fmul.o finv.o fpu.o 
 HEADER_SIM=simulator.h
 HEADER_UTILS=utils.h
 
