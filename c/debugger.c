@@ -87,140 +87,7 @@ typedef union myfloat_{
 /*
  * reference from simlator.c
  */
-extern operands decode_X(instruction);
 
-extern operands decode_B(instruction);
-
-extern operands decode_R(instruction);
-
-extern operands decode_I(instruction);
-
-
-int print_inst_add(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "inst_add\n");
-	return 1;
-}
-
-int print_inst_sub(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "inst_sub\n");
-	return 1;
-}
-
-int print_inst_mul(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "inst_muls\n");
-	return 1;
-}
-
-int print_inst_div(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "inst_div\n");
-	return 1;
-}
-
-int print_inst_invs(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "inst_invs\n");
-	return 1;
-}
-
-int print_inst_sqrts(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "inst_sqrts\n");
-	return 1;
-}
-
-int print_inst_beq(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "inst_beq\n");
-	return 1;
-}
-
-int print_inst_blt(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "inst_blt\n");
-	return 1;
-}
-
-int print_inst_ble(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "inst_ble\n");
-	return 1;
-}
-
-int print_inst_j(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "inst_j\n");
-	return 1;
-}
-
-int print_inst_jr(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "inst_jr\n");
-	return 1;
-}
-
-int print_inst_ld(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "inst_ld\n");
-	return 1;
-}
-
-int print_inst_st(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "inst_st\n");
-	return 1;
-}
-
-int print_inst_sll(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "inst_sll\n");
-	return 1;
-}
-
-int print_inst_srl(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "inst_srl\n");
-	return 1;
-}
-
-int print_inst_nop(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "inst_nop\n");
-	return 1;
-}
-
-int print_inst_itof(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "inst_itof\n");
-	return 1;
-}
-
-int print_inst_ftoi(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "inst_ftoi\n");
-	return 1;
-}
-
-int print_inst_in_(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "inst_in_\n");
-	return 1;
-}
-
-int print_inst_out(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "inst_out\n");
-	return 1;
-}
-
-int print_inst_hlt(simulator* sim_p, operands ops)
-{
-	fprintf(stderr, "inst_hlt\n");
-	return 0;
-}
 
 void print_mem(simulator* sim)
 {
@@ -252,113 +119,6 @@ void print_f_reg(simulator* sim)
 		fprintf(stderr, "freg[%d] = %f\n", i, sim->f_reg[i]);
 	}
 	return;
-}
-
-int print_inst(simulator* sim_p, instruction inst, unsigned char i_binary, unsigned char operation_binary, unsigned char function_binary, unsigned char xs_binary)
-{
-	unsigned char opt_binary = get_binary_unsigned(inst, 2, 4);
-	operands ops; 
-
-	print_int2bin(inst);
-	if(i_binary == 0 && operation_binary == 0 && xs_binary == 0){
-		/*
-		 * Format X
-		 */
-		ops = decode_X(inst);
-		disassemble(inst, ops);
-		switch(function_binary){
-			case 0:
-				return print_inst_hlt(sim_p, ops);
-				break;
-			case 1:
-				return print_inst_nop(sim_p, ops);
-				break;
-			case 2:
-				return print_inst_in_(sim_p, ops);
-				break;
-			case 3:
-				return print_inst_out(sim_p, ops);
-				break;
-			case 4:
-				return print_inst_itof(sim_p, ops);
-				break;
-			case 5:
-				return print_inst_ftoi(sim_p, ops);
-				break;
-		}
-	}
-
-	if(i_binary == 0 && opt_binary == 3){
-		/*
-		 * Format B
-		 */
-		ops = decode_B(inst);
-		switch(ops.bit_image){
-			case 0:
-				return print_inst_beq(sim_p, ops);
-				break;
-			case 1:
-				return print_inst_blt(sim_p, ops);
-				break;
-			case 2:
-				return print_inst_ble(sim_p, ops);
-				break;
-		}
-	}
-
-	if(i_binary == 0){
-		/*
-		 * Format R
-		 */
-		ops = decode_R(inst);
-		if(ops.bit_image == 0){
-			return print_inst_add(sim_p, ops);
-		}else if(ops.bit_image == 1){
-			return print_inst_sub(sim_p, ops);
-		}else if(ops.rorf == 1 && ops.bit_image == 2){
-			return print_inst_mul(sim_p, ops);
-		}else if(ops.rorf == 1 && ops.bit_image == 3){
-			return print_inst_div(sim_p, ops);
-		}
-	}
-
-	if(i_binary == 1){
-		/*
-		 * Format I
-		 */
-		ops = decode_I(inst);
-		if(ops.opt == 3){
-			if(ops.bit_image == 0){
-				return print_inst_ld(sim_p, ops);
-			}else if(ops.bit_image == 1){
-				return print_inst_st(sim_p, ops);
-			}else if(ops.rorf == 0 && ops.bit_image == 2){
-				return print_inst_sll(sim_p, ops);
-			}else if(ops.rorf == 0 && ops.bit_image == 3){
-				return print_inst_srl(sim_p, ops);
-			}else if(ops.rorf == 1 && ops.bit_image == 2){
-				return print_inst_invs(sim_p, ops);
-			}else if(ops.rorf == 1 && ops.bit_image == 3){
-				return print_inst_sqrts(sim_p, ops);
-			}
-		}else{
-			if(ops.bit_image == 0){
-				return print_inst_add(sim_p, ops);
-			}else if(ops.bit_image == 1){
-				return print_inst_sub(sim_p, ops);
-			}else if(ops.rorf == 0 && ops.bit_image == 2){
-				return print_inst_j(sim_p, ops);
-			}else if(ops.rorf == 0 && ops.bit_image == 3){
-				return print_inst_jr(sim_p, ops);
-			}else if(ops.rorf == 1 && ops.bit_image == 2){
-				return print_inst_mul(sim_p, ops);
-			}else if(ops.rorf == 1 && ops.bit_image == 3){
-				return print_inst_div(sim_p, ops);
-			}
-		}
-	}
-
-	return -1;
 }
 
 typedef struct query_{
@@ -447,7 +207,7 @@ int simulate_inst_debug(simulator* sim_p, instruction inst, unsigned char i_bina
 		function_binary_previous = function_binary;
 		xs_binary_previous = xs_binary;
 
-		print_inst(sim_p, inst, i_binary, operation_binary, function_binary, xs_binary);
+		disassemble(inst, i_binary, operation_binary, function_binary, xs_binary);
 
 		do{
 			fprintf(stderr, "%s", PROMPT);
@@ -455,7 +215,7 @@ int simulate_inst_debug(simulator* sim_p, instruction inst, unsigned char i_bina
 			q = parse_input(SCAN_BUF);
 			switch(q.operation){
 				case -1:
-					fprintf(stderr, "invalid argument");
+					fprintf(stderr, "invalid argument\n");
 					break;
 				case -2:
 					break;
@@ -525,7 +285,7 @@ void segfault_sigaction(int signal, siginfo_t *si, void *arg)
 	print_mem(&sim_previous);
 	print_reg(&sim_previous);
 	print_f_reg(&sim_previous);
-	print_inst(&sim_previous, inst_previous, i_binary_previous, operation_binary_previous, function_binary_previous, xs_binary_previous);
+	disassemble(inst_previous, i_binary_previous, operation_binary_previous, function_binary_previous, xs_binary_previous);
     exit(1);
 }
 

@@ -38,12 +38,20 @@ typedef struct operands_{
 }operands;
 
 
-simulator *init_sim();
+extern simulator *init_sim();
 
-void load_binary(simulator* sim, FILE* fp);
+extern void load_binary(simulator* sim, FILE* fp);
 
-void simulate(simulator* sim_p);
+extern void simulate(simulator* sim_p);
 
-void free_sim(simulator *sim);
+extern void free_sim(simulator *sim);
+
+extern operands decode_X(instruction inst);
+
+extern operands decode_B(instruction inst);
+
+extern operands decode_R(instruction inst);
+
+extern operands decode_I(instruction inst);
 
 #endif
