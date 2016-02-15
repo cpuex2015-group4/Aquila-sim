@@ -165,6 +165,8 @@ query parse_input(char* input)
 			q.operation = 3;
 		}else if(strcmp(str, "dump") * strcmp(str, "d") == 0){
 			q.operation = 4;
+		}else if(strcmp(str, "expand") * strcmp(str, "e") == 0){
+			q.operation = 5;
 		}else{
 			q.operation = -1;
 			return q;

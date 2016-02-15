@@ -2,16 +2,17 @@
 ---
 ####Debug Command
 
-##### next | n
-same as gcd
+##### next / n
+same as gcd.
 
-##### continue | c
-same as gcd
+##### continue / c
+same as gcd.
 
-##### break | b
-same as gcd
+##### break / b
+same as gcd.  
+break point is set to the Program Counter.
 
-##### dump | d
+##### dump / d
 Dump Register Contents  
 
 Arg 
