@@ -189,8 +189,8 @@ void load_binary(simulator* sim, FILE* fp)
 	//sim->reg[28] = sim->text_size + sim->data_size; //heap pointer 
 	sim->pc = sim->entry_point;
 	//fprintf(stderr, "sim->pc = %d\n", sim->pc);
-	sim->reg[28] = 0x10000 + sim->data_size; //heap pointer 
-	sim->reg[29] = 0xfffff;  //stack pointer 0xfffff
+	sim->reg[5] = 0x10000 + sim->data_size; //heap pointer 
+	sim->reg[7] = 0xfffff;  //stack pointer 0xfffff
 
 	if(STATISTICS) {
 		sim->called_count_table = calloc(sizeof(unsigned int), sim->text_size);
@@ -297,7 +297,6 @@ int inst_add(simulator* sim_p, operands ops)
 		float reg_s = sim_p->f_reg[ops.s_idx];
 		float reg_t = sim_p->f_reg[ops.t_idx];
 		float reg_d = reg_s + reg_t;
-		//fprintf(stderr, "%f + %f = %f\n", reg_s, reg_t, reg_d);
 		sim_p->f_reg[ops.d_idx] = opt_float(reg_d, ops.opt);
 	}
 	sim_p->pc++;
@@ -316,7 +315,6 @@ int inst_sub(simulator* sim_p, operands ops)
 		float reg_s = sim_p->f_reg[ops.s_idx];
 		float reg_t = sim_p->f_reg[ops.t_idx];
 		float reg_d = reg_s - reg_t;
-		//fprintf(stderr, "%f - %f = %f\n", reg_s, reg_t, reg_d);
 		sim_p->f_reg[ops.d_idx] = opt_float(reg_d, ops.opt);
 	}
 	sim_p->pc++;
@@ -335,7 +333,6 @@ int inst_mul(simulator* sim_p, operands ops)
 		float reg_s = sim_p->f_reg[ops.s_idx];
 		float reg_t = sim_p->f_reg[ops.t_idx];
 		float reg_d = reg_s * reg_t;
-		//fprintf(stderr, "%f * %f = %f\n", reg_s, reg_t, reg_d);
 		sim_p->f_reg[ops.d_idx] = opt_float(reg_d, ops.opt);
 	}
 	sim_p->pc++;
@@ -354,7 +351,6 @@ int inst_div(simulator* sim_p, operands ops)
 		float reg_s = sim_p->f_reg[ops.s_idx];
 		float reg_t = sim_p->f_reg[ops.t_idx];
 		float reg_d = reg_s / reg_t;
-		//fprintf(stderr, "%f / %f = %f\n", reg_s, reg_t, reg_d);
 		sim_p->f_reg[ops.d_idx] = opt_float(reg_d, ops.opt);
 	}
 	sim_p->pc++;
