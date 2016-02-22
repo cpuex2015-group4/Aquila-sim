@@ -211,7 +211,7 @@ int opt_int(int x, int opt){
 	}
 }
 
-int opt_float(float x, int opt){
+float opt_float(float x, int opt){
 	switch(opt){
 		case 0:
 			return x;
@@ -444,11 +444,10 @@ int inst_ble(simulator* sim_p, operands ops)
 int inst_j(simulator* sim_p, operands ops)
 {
 	if(INST_CNT)inst_cnt_arr[INST_J_IDX]++;
-	fprintf(stderr, "inst_j\n");
-	fprintf(stderr, "ops.imm = %d\n", ops.imm);
+	//fprintf(stderr, "inst_j\n");
+	//fprintf(stderr, "ops.imm = %d\n", ops.imm);
 	if(ops.opt == 1){
 		sim_p->reg[RA_IDX] = ((sim_p->pc + 1));
-		print_reg(sim_p);
 	}
 	sim_p->pc = ops.imm;
 	return 1;
@@ -459,7 +458,7 @@ int inst_jr(simulator* sim_p, operands ops)
 	if(INST_CNT)inst_cnt_arr[INST_JR_IDX]++;
 	int reg_t = sim_p->reg[ops.t_idx];
 	if(ops.opt == 1){
-		fprintf(stderr, "inst_jr\n");
+		//fprintf(stderr, "inst_jr\n");
 		sim_p->reg[RA_IDX] = ((sim_p->pc + 1));
 	}
 	sim_p->pc = reg_t;
@@ -470,7 +469,7 @@ int inst_ld(simulator* sim_p, operands ops)
 {
 	if(INST_CNT)inst_cnt_arr[INST_LW_IDX]++;
 	int reg_s = sim_p->reg[ops.s_idx];
-	fprintf(stderr, "load val  = %d\n", sim_p->mem[reg_s + ops.imm]);
+	//fprintf(stderr, "load val  = %d\n", sim_p->mem[reg_s + ops.imm]);
 	if(ops.rorf == 0){
 		sim_p->reg[ops.d_idx] = sim_p->mem[reg_s + ops.imm];
 	}else{
@@ -484,11 +483,12 @@ int inst_st(simulator* sim_p, operands ops)
 {
 	if(INST_CNT)inst_cnt_arr[INST_SW_IDX]++;
 	int reg_s = sim_p->reg[ops.s_idx];
-	int reg_d = sim_p->reg[ops.d_idx];
-	fprintf(stderr, "st_val  = %d\n", reg_d);
+	//fprintf(stderr, "st_val  = %d\n", reg_d);
 	if(ops.rorf == 0){
+		int reg_d = sim_p->reg[ops.d_idx];
 		sim_p->mem[reg_s + ops.imm] = reg_d;
 	}else{
+		float reg_d = sim_p->f_reg[ops.d_idx];
 		sim_p->mem[reg_s + ops.imm] = float2int(reg_d);
 	}
 	sim_p->pc++;
@@ -526,7 +526,7 @@ int inst_in_(simulator* sim_p, operands ops)
 int inst_out(simulator* sim_p, operands ops)
 {
 	if(INST_CNT)inst_cnt_arr[INST_OUT_IDX]++;
-	printf("%c", (char)sim_p->reg[ops.t_idx]);
+	fprintf(stdout, "%c", (char)sim_p->reg[ops.s_idx]);
 	sim_p->pc++;
 	return 1;
 }
@@ -714,9 +714,6 @@ void simulate(simulator* sim_p)
 	 */
 	if(INST_CNT)print_inst_cnt();
 	fprintf(stderr, "dynamic_inst_cnt = %lu\n", sim_p->dynamic_inst_cnt);
-	print_reg(sim_p);
-
-	print_f_reg(sim_p);
 
 	/*
 	 * Print Resut
@@ -724,4 +721,5 @@ void simulate(simulator* sim_p)
 	 *  Format:  "int:[int_res],float:[float_res]"
 	 */
 	fprintf(stderr, "int:%d,float:%.8f\n", sim_p->reg[3], sim_p->f_reg[3]);
+	print_f_reg(sim_p);
 }

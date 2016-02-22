@@ -192,7 +192,11 @@ int simulate_inst_debug(simulator* sim_p, instruction inst, unsigned char i_bina
 {
 	query q;
 	while(1){
-		if(is_running && !breakpoint[sim_p->pc - PC_OFFSET])break; //if not breakpoint && some breakpoint is set, run continuously
+		if(is_running && !breakpoint[sim_p->pc - PC_OFFSET]){
+			fprintf(stderr, "%lu : ", sim_p->pc - PC_OFFSET);
+			disassemble(inst, i_binary, operation_binary, function_binary, xs_binary);
+			break; //if not breakpoint && some breakpoint is set, run continuously
+		}
 
 		if(breakpoint[sim_p->pc - PC_OFFSET]){
 			breakpoint[sim_p->pc - PC_OFFSET] = 0;

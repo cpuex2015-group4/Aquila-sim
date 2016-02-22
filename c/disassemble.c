@@ -138,14 +138,13 @@ int disassemble(instruction inst, unsigned char i_binary, unsigned char operatio
 				if(!ops.rorf){
 					fprintf(stderr, "ld %s,%s,%d\n", REGISTERS_G[ops.d_idx], REGISTERS_G[ops.s_idx], ops.imm);
 				}else{
-					fprintf(stderr, "ld.s %s,%s,%d\n", REGISTERS_F[ops.d_idx], REGISTERS_F[ops.s_idx], ops.imm);
+					fprintf(stderr, "ld.s %s,%s,%d\n", REGISTERS_F[ops.d_idx], REGISTERS_G[ops.s_idx], ops.imm);
 				}
 			}else if(ops.bit_image == 1){
 				if(!ops.rorf){
 					fprintf(stderr, "st %s,%s,%d\n", REGISTERS_G[ops.d_idx], REGISTERS_G[ops.s_idx], ops.imm);
-					print_int2bin(inst);
 				}else{
-					fprintf(stderr, "st.s %s,%s,%d\n", REGISTERS_F[ops.d_idx], REGISTERS_F[ops.s_idx], ops.imm);
+					fprintf(stderr, "st.s %s,%s,%d\n", REGISTERS_F[ops.d_idx], REGISTERS_G[ops.s_idx], ops.imm);
 				}
 			}else if(ops.rorf == 0 && ops.bit_image == 2){
 				fprintf(stderr, "sll %s,%s,%d\n", REGISTERS_G[ops.d_idx], REGISTERS_G[ops.s_idx], ops.imm);
