@@ -72,8 +72,9 @@ simulator *init_sim()
 	sim->dynamic_inst_cnt = 0;
 	sim->fpcond = 0;
 	sim->reg = (int*)malloc(sizeof(int) * 32);
-	memset(sim->reg, 0, (sizeof(int) * 32));
+	memset(sim->reg, 1, (sizeof(int) * 32));
 	sim->f_reg = (float*)malloc(sizeof(float) * 32);
+	memset(sim->f_reg, 1, (sizeof(float) * 32));
 
 	for(i = 0; i < 32; i++){
 		sim->f_reg[i] = 0.0;
