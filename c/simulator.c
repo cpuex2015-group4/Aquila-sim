@@ -295,6 +295,7 @@ int inst_add(simulator* sim_p, operands ops)
 		float reg_s = sim_p->f_reg[ops.s_idx];
 		float reg_t = sim_p->f_reg[ops.t_idx];
 		float reg_d = reg_s + reg_t;
+		//fprintf(stderr, "%f + %f = %f\n", reg_s, reg_t, reg_d);
 		sim_p->f_reg[ops.d_idx] = opt_float(reg_d, ops.opt);
 	}
 	sim_p->pc++;
@@ -313,6 +314,7 @@ int inst_sub(simulator* sim_p, operands ops)
 		float reg_s = sim_p->f_reg[ops.s_idx];
 		float reg_t = sim_p->f_reg[ops.t_idx];
 		float reg_d = reg_s - reg_t;
+		//fprintf(stderr, "%f - %f = %f\n", reg_s, reg_t, reg_d);
 		sim_p->f_reg[ops.d_idx] = opt_float(reg_d, ops.opt);
 	}
 	sim_p->pc++;
@@ -331,6 +333,7 @@ int inst_mul(simulator* sim_p, operands ops)
 		float reg_s = sim_p->f_reg[ops.s_idx];
 		float reg_t = sim_p->f_reg[ops.t_idx];
 		float reg_d = reg_s * reg_t;
+		//fprintf(stderr, "%f * %f = %f\n", reg_s, reg_t, reg_d);
 		sim_p->f_reg[ops.d_idx] = opt_float(reg_d, ops.opt);
 	}
 	sim_p->pc++;
@@ -349,6 +352,7 @@ int inst_div(simulator* sim_p, operands ops)
 		float reg_s = sim_p->f_reg[ops.s_idx];
 		float reg_t = sim_p->f_reg[ops.t_idx];
 		float reg_d = reg_s / reg_t;
+		//fprintf(stderr, "%f / %f = %f\n", reg_s, reg_t, reg_d);
 		sim_p->f_reg[ops.d_idx] = opt_float(reg_d, ops.opt);
 	}
 	sim_p->pc++;

@@ -152,7 +152,7 @@ query parse_input(char* input)
 	char* str;
 	str = strtok(input, SEPS);
 	if(str == NULL){
-			q.operation = -1;
+			q.operation = 0;
 			return q;
 	}else{
 		if(strcmp(str, "next") * strcmp(str, "n") == 0){
@@ -231,6 +231,13 @@ int simulate_inst_debug(simulator* sim_p, instruction inst, unsigned char i_bina
 					break;
 			}
 		}while(q.argument < 0);
+
+		if(q.operation == 0){
+			/*
+			 * next
+			 */
+			break;
+		}
 
 		if(q.operation == 1){
 			/*
