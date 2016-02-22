@@ -143,13 +143,14 @@ int disassemble(instruction inst, unsigned char i_binary, unsigned char operatio
 			}else if(ops.bit_image == 1){
 				if(!ops.rorf){
 					fprintf(stderr, "st %s,%s,%d\n", REGISTERS_G[ops.d_idx], REGISTERS_G[ops.s_idx], ops.imm);
+					print_int2bin(inst);
 				}else{
 					fprintf(stderr, "st.s %s,%s,%d\n", REGISTERS_F[ops.d_idx], REGISTERS_F[ops.s_idx], ops.imm);
 				}
 			}else if(ops.rorf == 0 && ops.bit_image == 2){
-				fprintf(stderr, "sll %s,%s,%s\n", REGISTERS_G[ops.d_idx], REGISTERS_G[ops.s_idx], REGISTERS_G[ops.t_idx]);
+				fprintf(stderr, "sll %s,%s,%d\n", REGISTERS_G[ops.d_idx], REGISTERS_G[ops.s_idx], ops.imm);
 			}else if(ops.rorf == 0 && ops.bit_image == 3){
-				fprintf(stderr, "srl %s,%s,%s\n", REGISTERS_G[ops.d_idx], REGISTERS_G[ops.s_idx], REGISTERS_G[ops.t_idx]);
+				fprintf(stderr, "srl %s,%s,%d\n", REGISTERS_G[ops.d_idx], REGISTERS_G[ops.s_idx], ops.imm);
 			}else if(ops.rorf == 1 && ops.bit_image == 2){
 				fprintf(stderr, "inv.s %s,%s\n", REGISTERS_F[ops.d_idx], REGISTERS_F[ops.s_idx]);
 			}else if(ops.rorf == 1 && ops.bit_image == 3){

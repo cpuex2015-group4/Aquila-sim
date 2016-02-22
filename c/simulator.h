@@ -3,6 +3,7 @@
 #define SAFE_DELETE(x) {free(x);(x)=NULL;}
 
 static const long PC_OFFSET = 0x400;
+static const int RA_IDX = 4;
 
 typedef unsigned int instruction;
 
