@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 #include "./utils.h"
 
 void print_int2bin(unsigned int n)
@@ -88,3 +89,25 @@ unsigned int float2ui(float f)
 	f_ui.f = f;
 	return f_ui.ui;
 }
+
+uint32_t reverse(uint32_t in)
+{
+	int i;
+	uint32_t out = 0;
+	for(i = 0; i < 32; i++){
+		if((in >> i) % 2 == 0){
+			out += (1 << i);
+		}
+	}
+	return out + 1;
+}
+
+extern uint32_t fromdownto(uint32_t from, int up, int down);
+
+// to(up downto down) <= from;
+extern uint32_t todownto(uint32_t from, uint32_t to, int up, int down);
+
+extern void printbit(char *name, uint32_t f, int up, int down);
+
+int bitwiseor(uint32_t i);
+

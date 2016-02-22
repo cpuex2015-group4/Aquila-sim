@@ -5,6 +5,8 @@
 #include <math.h>
 #include "./utils.h"
 #include "./simulator.h"
+#include "./ftoi.h"
+#include "./itof.h"
 
 
 extern int MEM_SIZE;
@@ -66,7 +68,6 @@ char* inst_name_arr[] = { "add", "addi", "and", "beq", "bne", "j", "jal", "jr", 
 
 simulator *init_sim()
 {
-	int i;
 	simulator *sim = (simulator *)malloc(sizeof(simulator));
 	sim->pc = 0;
 	sim->dynamic_inst_cnt = 0;
@@ -78,11 +79,11 @@ simulator *init_sim()
 	memset(sim->f_reg, 1, (sizeof(float) * 32));
 	sim->f_reg[0] = 0.0;
 
-	for(i = 0; i < 32; i++){
-		sim->f_reg[i] = 0.0;
-	}
+	//int i;
+	//for(i = 0; i < 32; i++){
+	//	sim->f_reg[i] = 0.0;
+	//}
 
-	sim->reg[29] = 0xfffff;  //stack pointer 0xfffff
 	sim->mem = calloc(sizeof(int), MEM_SIZE);
 	return sim;
 }
@@ -542,12 +543,18 @@ int inst_nop(simulator* sim_p, operands ops)
 
 int inst_itof(simulator* sim_p, operands ops)
 {
+	int reg_s = sim_p->reg[ops.s_idx];
+	float reg_d = itof(reg_s);
+	sim_p->f_reg[ops.d_idx] = reg_d;
 	sim_p->pc++;
 	return 1;
 }
 
 int inst_ftoi(simulator* sim_p, operands ops)
 {
+	float reg_s = sim_p->f_reg[ops.s_idx];
+	int reg_d = ftoi(reg_s);
+	sim_p->reg[ops.d_idx] = reg_d;
 	sim_p->pc++;
 	return 1;
 }
