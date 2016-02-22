@@ -38,7 +38,7 @@ char* jump_option_string(int jump_option)
 	}
 }
 
-void disassemble(instruction inst, unsigned char i_binary, unsigned char operation_binary, unsigned char function_binary, unsigned char xs_binary)
+int disassemble(instruction inst, unsigned char i_binary, unsigned char operation_binary, unsigned char function_binary, unsigned char xs_binary)
 {
 	unsigned char opt_binary = get_binary_unsigned(inst, 2, 4);
 	operands ops; 
@@ -67,6 +67,7 @@ void disassemble(instruction inst, unsigned char i_binary, unsigned char operati
 				fprintf(stderr, "ftoi\n");
 				break;
 		}
+		return 1;
 	}
 
 	if(i_binary == 0 && opt_binary == 3){
@@ -97,6 +98,7 @@ void disassemble(instruction inst, unsigned char i_binary, unsigned char operati
 				}
 				break;
 		}
+		return 1;
 	}
 
 	if(i_binary == 0){
@@ -123,6 +125,7 @@ void disassemble(instruction inst, unsigned char i_binary, unsigned char operati
 		}else if(ops.rorf == 0 && ops.bit_image == 2){
 			fprintf(stderr, "jr%s %s\n", jump_option_string(ops.opt), REGISTERS_G[ops.t_idx]);
 		}
+		return 1;
 	}
 
 	if(i_binary == 1){
@@ -173,5 +176,7 @@ void disassemble(instruction inst, unsigned char i_binary, unsigned char operati
 					fprintf(stderr, "j%s %d\n", jump_option_string(ops.opt), ops.imm);
 			}
 		}
+		return 1;
 	}
+	return -1;
 }

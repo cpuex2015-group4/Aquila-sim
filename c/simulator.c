@@ -414,6 +414,7 @@ int inst_ble(simulator* sim_p, operands ops)
 	if(ops.rorf == 0){
 		int reg_d = sim_p->reg[ops.d_idx];
 		int reg_s = sim_p->reg[ops.s_idx];
+		//fprintf(stderr, "reg_d = %d, reg_s = %d\n", reg_d, reg_s);
 		if(reg_d <= reg_s){
 			sim_p->pc += ops.imm;
 		}
