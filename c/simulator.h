@@ -4,6 +4,7 @@
 
 static const long PC_OFFSET = 0x400;
 static const int RA_IDX = 4;
+static const int BUF_IN_SIZE = 100000;
 
 typedef unsigned int instruction;
 
@@ -23,6 +24,8 @@ typedef struct simulator_{
 	unsigned int data_size;
 	unsigned int text_size;
 	unsigned int entry_point;
+	FILE *fp;
+	char* buf_in;
 }simulator;
 
 

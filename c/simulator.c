@@ -78,6 +78,12 @@ simulator *init_sim()
 	sim->f_reg = (float*)malloc(sizeof(float) * 32);
 	memset(sim->f_reg, 1, (sizeof(float) * 32));
 	sim->f_reg[0] = 0.0;
+	sim->buf_in = (char*)malloc(BUF_IN_SIZE);
+
+	if ((sim->fp = fopen("./contest.sld", "r")) == NULL) {
+		fprintf(stderr, "ファイルを開けません!\n");
+		exit(2);                /* メッセージを表示して終了 */
+	}
 
 	//int i;
 	//for(i = 0; i < 32; i++){
@@ -451,7 +457,7 @@ int inst_j(simulator* sim_p, operands ops)
 	//fprintf(stderr, "inst_j\n");
 	//fprintf(stderr, "ops.imm = %d\n", ops.imm);
 	if(ops.opt == 1){
-		sim_p->reg[RA_IDX] = ((sim_p->pc + 1));
+		sim_p->reg[RA_IDX] = (sim_p->pc + 1);
 	}
 	sim_p->pc = ops.imm;
 	return 1;
@@ -487,7 +493,7 @@ int inst_st(simulator* sim_p, operands ops)
 {
 	if(INST_CNT)inst_cnt_arr[INST_SW_IDX]++;
 	int reg_s = sim_p->reg[ops.s_idx];
-	//fprintf(stderr, "st_val  = %d\n", reg_d);
+	fprintf(stderr, "pc = %ld, s_idx = %d, st regs = %d, imm = %d\n", sim_p->pc - PC_OFFSET, ops.s_idx, reg_s, ops.imm);
 	if(ops.rorf == 0){
 		int reg_d = sim_p->reg[ops.d_idx];
 		sim_p->mem[reg_s + ops.imm] = reg_d;
@@ -521,8 +527,9 @@ int inst_in_(simulator* sim_p, operands ops)
 {
 	if(INST_CNT)inst_cnt_arr[INST_IN__IDX]++;
 	char in_;
-	in_ = getchar();
-	sim_p->reg[ops.t_idx] = (unsigned int)in_ & 0xff;
+	in_ = getc(sim_p->fp);
+	//in_ = getchar();
+	sim_p->reg[ops.d_idx] = (unsigned int)in_ & 0xff;
 	sim_p->pc++;
 	return 1;
 }
