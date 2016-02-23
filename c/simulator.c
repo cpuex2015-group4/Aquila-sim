@@ -493,7 +493,7 @@ int inst_st(simulator* sim_p, operands ops)
 {
 	if(INST_CNT)inst_cnt_arr[INST_SW_IDX]++;
 	int reg_s = sim_p->reg[ops.s_idx];
-	fprintf(stderr, "pc = %ld, s_idx = %d, st regs = %d, imm = %d\n", sim_p->pc - PC_OFFSET, ops.s_idx, reg_s, ops.imm);
+	//fprintf(stderr, "pc = %ld, s_idx = %d, st regs = %d, imm = %d\n", sim_p->pc - PC_OFFSET, ops.s_idx, reg_s, ops.imm);
 	if(ops.rorf == 0){
 		int reg_d = sim_p->reg[ops.d_idx];
 		sim_p->mem[reg_s + ops.imm] = reg_d;
