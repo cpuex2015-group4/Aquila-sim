@@ -4,3 +4,4 @@ csim
 *.pyc
 *.so
 lua-5.2.1_MacOS107_lib/
+out
